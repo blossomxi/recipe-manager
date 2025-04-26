@@ -57,7 +57,3 @@ This project is a **Recipe Manager** application developed in C++ using full Obj
 ### Stage 6: Stretch Features (Optional)
 - Add ratings or tags
 - Enhance blacklist system with suggestions for substitutions
-
-## UML Diagram
-
-![](UML.png)
