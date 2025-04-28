@@ -1,0 +1,17 @@
+// src/VegetarianRecipe.h
+#pragma once
+
+#include "Recipe.h"
+
+class VegetarianRecipe : public Recipe {
+public:
+    // Constructor - forwards to base and sets specific DietType
+    VegetarianRecipe(const std::string& title = "", 
+                     int prepTime = 0, 
+                     MealType mealType = MealType::Other);
+
+    // Override the display method
+    void display() const override;
+
+    // No new data members needed for this simple version
+};
