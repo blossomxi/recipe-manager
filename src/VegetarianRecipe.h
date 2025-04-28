@@ -1,5 +1,5 @@
 // src/VegetarianRecipe.h
-#pragma once
+#pragma once // Prevent multiple inclusions
 
 #include "Recipe.h"
 
@@ -7,8 +7,8 @@ class VegetarianRecipe : public Recipe {
 public:
     // Constructor - forwards to base and sets specific DietType
     VegetarianRecipe(const std::string& title = "", 
-                     int prepTime = 0, 
-                     MealType mealType = MealType::Other);
+       int prepTime = 0, 
+       MealType mealType = MealType::Other);
 
     // Override the display method
     void display() const override;
