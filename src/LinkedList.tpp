@@ -139,3 +139,27 @@ void LinkedList<T>::insertionSort(Compare comp) {
     }
     head = sorted; // Update the list head to the new sorted list
 }
+
+template <typename T>
+typename LinkedList<T>::iterator LinkedList<T>::linearSearch(const T& target) const {
+    Node* current = head;
+    while (current) {
+        if (current->data == target) {
+            return iterator(current);
+        }
+        current = current->next;
+    }
+    return end();
+}
+
+template <typename T>
+typename LinkedList<T>::const_iterator LinkedList<T>::linearSearch(const T& target) const {
+    const Node* current = head;
+    while (current) {
+        if (current->data == target) {
+            return const_iterator(current);
+        }
+        current = current->next;
+    }
+    return cend();
+}

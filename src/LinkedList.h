@@ -97,6 +97,8 @@ public:
     void insertionSort(Compare comp);
     
     // TODO: Linear search (can be external or member)
+    iterator linearSearch(const &T target);
+    const_iterator linearSearch(const &T target) const;
 };
 
 // Include the template implementation file
