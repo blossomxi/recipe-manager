@@ -56,6 +56,25 @@ DietType stringToDietType(const std::string& str) {
 Recipe::Recipe(const std::string& title, int prepTime, MealType mealType, DietType dietType)
     : title(title), prepTime(prepTime), mealType(mealType), dietType(dietType) {}
 
+Recipe::Recipe(const Recipe& copy) {
+    this->title = copy.title;
+    this->prepTime = copy.prepTime;
+    this->mealType = copy.mealType;
+    this->dietType = copy.dietType;
+    this->ingredients = copy.ingredients;
+}
+
+Recipe& Recipe::operator=(const Recipe& copy) {
+    if (this != &copy) {
+        this->title = copy.title;
+        this->prepTime = copy.prepTime;
+        this->mealType = copy.mealType;
+        this->dietType = copy.dietType;
+        this->ingredients = copy.ingredients;
+    }
+    return *this;
+}
+
 // Getters
 std::string Recipe::getTitle() const {
     return title;
@@ -96,5 +115,19 @@ void Recipe::setDietType(DietType type) {
     this->dietType = type;
 }
 
-// TODO: Implement ingredient management methods
+// TODO: Implement ingredient management methods (missing editRecipe)
+bool Recipe::matchesTitle(string title) const {
+    return this->title == title;
+}
+
+bool Recipe::matchesIngredient(string ingredient) const {
+    vector<Ingredient>::iterator it = (this->ingredients).begin();
+    while(it != (this->ingredients).end()) {
+        if(it->getName() == ingredient) {
+            return true;
+        }
+        it++;
+    }
+    return false;
+}
 // TODO: Implement shared helper functions if needed
