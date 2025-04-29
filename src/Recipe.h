@@ -49,6 +49,10 @@ public:
     // Virtual destructor is crucial for base classes with virtual functions
     virtual ~Recipe() = default;
 
+    // Copy constructors for Rule of Three
+    Recipe(const Recipe& copy);
+    Recipe& operator=(const Recipe& copy);
+
     // Abstract display method
     virtual void display() const = 0;
 
@@ -67,4 +71,7 @@ public:
     void setDietType(DietType type);
     
     // TODO: Methods for filtering, searching (can be external functions too)
+    // TODO: Implement ingredient management methods (missing editRecipe)
+    bool matchesTitle(string title) const;
+    bool matchesIngredient(string ingredient) const;
 };
