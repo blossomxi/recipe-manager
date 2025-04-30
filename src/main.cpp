@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 #include <limits>
-#include <vector>
+// TODO: Remove vector include when ingredient serialization is implemented
 #include <stdexcept> // For exception handling during parsing
 
 #include "LinkedList.h"
@@ -20,8 +20,11 @@ const std::string RECIPE_FILE = "recipes.txt";
 void displayMenu();
 void addRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes);
 void listRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes);
+void addIngredientsToRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes);
 void saveRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes);
 void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes);
+MealType getMealTypeInput();
+DietType getDietTypeInput();
 std::unique_ptr<Recipe> createRecipeFromData(const std::string& title, int prepTime, MealType mealType, DietType dietType);
 
 int main() {
@@ -29,19 +32,19 @@ int main() {
     loadRecipes(recipeList);
 
     int choice = 0;
-    while (choice != 3) {
+    while (choice != 4) {
         displayMenu();
         std::cout << "Enter your choice: ";
         
         // Improved input handling
         if (!(std::cin >> choice)) {
             std::cin.clear(); // Clear error flags
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Invalid input. Please enter a number." << std::endl;
-            choice = 0; // Reset choice
+            choice = 0;
             continue;
         }
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard the rest of the line (including newline)
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
             case 1:
@@ -51,6 +54,9 @@ int main() {
                 listRecipes(recipeList);
                 break;
             case 3:
+                addIngredientsToRecipe(recipeList);
+                break;
+            case 4:
                 std::cout << "Saving recipes and exiting." << std::endl;
                 saveRecipes(recipeList);
                 break;
@@ -58,18 +64,19 @@ int main() {
                 std::cout << "Invalid choice. Please try again." << std::endl;
                 break;
         }
-        std::cout << std::endl; // Add a newline for spacing
+        std::cout << std::endl;
     }
 
     return 0;
 }
 
 void displayMenu() {
-    std::cout << "--- Recipe Manager Menu ---" << std::endl;
+    std::cout << "=== Recipe Manager Menu ===" << std::endl;
     std::cout << "1. Add Recipe" << std::endl;
     std::cout << "2. List Recipes" << std::endl;
-    std::cout << "3. Quit" << std::endl;
-    std::cout << "-------------------------" << std::endl;
+    std::cout << "3. Add Ingredients to Recipe" << std::endl;
+    std::cout << "4. Quit" << std::endl;
+    std::cout << "=========================" << std::endl;
 }
 
 void addRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
@@ -87,13 +94,8 @@ void addRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
     }
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Consume newline left by cin >> prepTime
 
-    std::cout << "Enter meal type (Breakfast, Lunch, Dinner, Snack, Dessert, Other): ";
-    std::getline(std::cin, mealStr);
-    MealType mealType = stringToMealType(mealStr);
-
-    std::cout << "Enter diet type (Vegetarian, Vegan, Pescatarian, Omnivore, Other): ";
-    std::getline(std::cin, dietStr);
-    DietType dietType = stringToDietType(dietStr);
+    MealType mealType = getMealTypeInput();
+    DietType dietType = getDietTypeInput();
 
     // Create the appropriate recipe type based on DietType
     try {
@@ -108,7 +110,9 @@ void addRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
         std::cerr << "Error adding recipe: " << e.what() << std::endl;
     }
     
-    // TODO: Add functionality to input ingredients
+    // TODO: Add ingredient input functionality
+    // TODO: Add ingredient blacklist validation
+    // TODO: Add recipe sorting options
 }
 
 void listRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
@@ -143,7 +147,8 @@ void saveRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
                      << recipePtr->getPrepTime() << ","
                      << mealTypeToString(recipePtr->getMealType()) << ","
                      << dietTypeToString(recipePtr->getDietType()) << std::endl;
-             // TODO: Add ingredient serialization later
+             // TODO: Add ingredient serialization
+             // TODO: Add recipe categories and tags serialization
         }
     }
     outFile.close();
@@ -151,6 +156,113 @@ void saveRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
 
 
 // Basic loading: Title,PrepTime,MealTypeStr,DietTypeStr
+void addIngredientsToRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+    if (recipes.isEmpty()) {
+        std::cout << "No recipes available. Please add a recipe first." << std::endl;
+        return;
+    }
+
+    std::cout << "Available Recipes:" << std::endl;
+    int index = 1;
+    for (const auto& recipe : recipes) {
+        std::cout << index++ << ". " << recipe->getTitle() << std::endl;
+    }
+
+    std::cout << "Enter recipe number: ";
+    int choice;
+    if (!(std::cin >> choice) || choice < 1 || choice > static_cast<int>(recipes.size())) {
+        std::cout << "Invalid recipe number." << std::endl;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return;
+    }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    // Get iterator to the selected recipe
+    auto it = recipes.begin();
+    for (int i = 1; i < choice; ++i) {
+        ++it;
+    }
+
+    std::cout << "\nAdding ingredients to: " << (*it)->getTitle() << std::endl;
+    std::cout << "Enter ingredients (empty line to finish):\n";
+    std::cout << "Format: ingredient_name,quantity (e.g., 'flour,2 cups')" << std::endl;
+
+    std::string line;
+    while (true) {
+        std::cout << "> ";
+        std::getline(std::cin, line);
+        if (line.empty()) break;
+
+        size_t comma = line.find(',');
+        std::string name = (comma != std::string::npos) ? line.substr(0, comma) : line;
+        std::string quantity = (comma != std::string::npos) ? line.substr(comma + 1) : "";
+
+        // Trim whitespace
+        name = name.substr(name.find_first_not_of(" \t"));
+        name = name.substr(0, name.find_last_not_of(" \t") + 1);
+        quantity = quantity.substr(quantity.find_first_not_of(" \t"));
+        quantity = quantity.substr(0, quantity.find_last_not_of(" \t") + 1);
+
+        if (!name.empty()) {
+            (*it)->addIngredient(Ingredient(name, quantity));
+            std::cout << "Added: " << name;
+            if (!quantity.empty()) std::cout << " (" << quantity << ")";
+            std::cout << std::endl;
+        }
+    }
+}
+
+MealType getMealTypeInput() {
+    std::cout << "Enter meal type:\n";
+    std::cout << "1. Breakfast (or 'b')\n";
+    std::cout << "2. Lunch (or 'l')\n";
+    std::cout << "3. Dinner (or 'd')\n";
+    std::cout << "4. Snack (or 's')\n";
+    std::cout << "Choice: ";
+    
+    std::string input;
+    std::getline(std::cin, input);
+    
+    // Convert to lowercase for letter input
+    if (!input.empty()) {
+        input[0] = std::tolower(input[0]);
+    }
+    
+    if (input == "1" || input == "b") return MealType::Breakfast;
+    if (input == "2" || input == "l") return MealType::Lunch;
+    if (input == "3" || input == "d") return MealType::Dinner;
+    if (input == "4" || input == "s") return MealType::Snack;
+    
+    std::cout << "Invalid meal type. Defaulting to Dinner." << std::endl;
+    return MealType::Dinner;
+}
+
+DietType getDietTypeInput() {
+    std::cout << "Enter diet type:\n";
+    std::cout << "1. Vegan (or 'v')\n";
+    std::cout << "2. Vegetarian (or 'g')\n";
+    std::cout << "3. Pescatarian (or 'p')\n";
+    std::cout << "4. Omnivore (or 'o')\n";
+    std::cout << "Choice: ";
+    
+    std::string input;
+    std::getline(std::cin, input);
+    
+    // Convert to lowercase for letter input
+    if (!input.empty()) {
+        input[0] = std::tolower(input[0]);
+    }
+    
+    if (input == "1" || input == "v") return DietType::Vegan;
+    if (input == "2" || input == "g") return DietType::Vegetarian;
+    if (input == "3" || input == "p") return DietType::Pescatarian;
+    if (input == "4" || input == "o") return DietType::Omnivore;
+    
+    std::cout << "Invalid diet type. Defaulting to Omnivore." << std::endl;
+    return DietType::Omnivore;
+}
+
 void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
     std::ifstream inFile(RECIPE_FILE);
     if (!inFile) {
@@ -179,7 +291,8 @@ void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
                 
                 std::unique_ptr<Recipe> recipe = createRecipeFromData(title, prepTime, mealType, dietType);
                 if (recipe) {
-                   // TODO: Add ingredient deserialization later
+                   // TODO: Add ingredient deserialization
+                   // TODO: Add recipe categories and tags deserialization
                    recipes.push_back(std::move(recipe));
                 } else {
                     std::cerr << "Warning [Line " << lineNumber << "]: Could not create recipe (unknown diet type?): " << line << std::endl;
@@ -204,21 +317,15 @@ void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
 // Factory function to create the correct recipe type
 std::unique_ptr<Recipe> createRecipeFromData(const std::string& title, int prepTime, MealType mealType, DietType dietType) {
     switch (dietType) {
-        case DietType::Vegetarian:
-            return std::make_unique<VegetarianRecipe>(title, prepTime, mealType);
         case DietType::Vegan:
-            return std::make_unique<VeganRecipe>(title, prepTime, mealType);
+            return std::unique_ptr<Recipe>(new VeganRecipe(title, prepTime, mealType));
+        case DietType::Vegetarian:
+            return std::unique_ptr<Recipe>(new VegetarianRecipe(title, prepTime, mealType));
         case DietType::Pescatarian:
-            return std::make_unique<PescatarianRecipe>(title, prepTime, mealType);
+            return std::unique_ptr<Recipe>(new PescatarianRecipe(title, prepTime, mealType));
         case DietType::Omnivore:
-            return std::make_unique<OmnivoreRecipe>(title, prepTime, mealType);
-        case DietType::Other:
-             // For 'Other', we might default to Omnivore or a generic base, let's use Omnivore for now
-             // Or potentially have a GenericRecipe class later.
-             // Alternatively, could return nullptr or throw an exception if 'Other' isn't directly supported
-             std::cerr << "Warning: Creating 'Omnivore' recipe for 'Other' diet type." << std::endl;
-             return std::make_unique<OmnivoreRecipe>(title, prepTime, mealType); // Example: Defaulting 'Other' to Omnivore
+            return std::unique_ptr<Recipe>(new OmnivoreRecipe(title, prepTime, mealType));
         default:
-            return nullptr; // Or throw an exception for unknown types
+            throw std::invalid_argument("Invalid diet type");
     }
 }

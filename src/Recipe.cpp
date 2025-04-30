@@ -84,7 +84,7 @@ int Recipe::getPrepTime() const {
     return prepTime;
 }
 
-const std::vector<Ingredient>& Recipe::getIngredients() const {
+const LinkedList<Ingredient>& Recipe::getIngredients() const {
     return ingredients;
 }
 
@@ -116,18 +116,39 @@ void Recipe::setDietType(DietType type) {
 }
 
 // TODO: Implement ingredient management methods (missing editRecipe)
-bool Recipe::matchesTitle(string title) const {
+// TODO: Add recipe serialization for file I/O
+// TODO: Add ingredient validation and blacklist checking
+bool Recipe::matchesTitle(std::string title) const {
     return this->title == title;
 }
 
-bool Recipe::matchesIngredient(string ingredient) const {
-    vector<Ingredient>::iterator it = (this->ingredients).begin();
-    while(it != (this->ingredients).end()) {
-        if(it->getName() == ingredient) {
+bool Recipe::matchesIngredient(std::string ingredient) const {
+    for (auto it = ingredients.cbegin(); it != ingredients.cend(); ++it) {
+        if (it->getName() == ingredient) {
             return true;
         }
-        it++;
     }
     return false;
 }
-// TODO: Implement shared helper functions if needed
+// Ingredient management methods
+void Recipe::addIngredient(const Ingredient& ingredient) {
+    ingredients.push_back(Ingredient(ingredient));
+}
+
+void Recipe::removeIngredient(const std::string& ingredientName) {
+    for (auto it = ingredients.begin(); it != ingredients.end(); ++it) {
+        if (it->getName() == ingredientName) {
+            ingredients.remove(*it);
+            break;
+        }
+    }
+}
+
+void Recipe::editIngredient(const std::string& oldName, const Ingredient& newIngredient) {
+    for (auto it = ingredients.begin(); it != ingredients.end(); ++it) {
+        if (it->getName() == oldName) {
+            *it = newIngredient;
+            break;
+        }
+    }
+}

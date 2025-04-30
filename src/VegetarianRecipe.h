@@ -13,5 +13,6 @@ public:
     // Override the display method
     void display() const override;
 
-    // No new data members needed for this simple version
+    // Virtual destructor
+    virtual ~VegetarianRecipe() = default;
 };

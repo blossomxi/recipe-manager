@@ -1,59 +1,92 @@
-# Fork & Function
+# Fork & Function: Recipe Manager
 
-## Overview
-This project is a **Recipe Manager** application developed in C++ using full Object-Oriented Programming principles. It allows users to:
-- Add, edit, and remove recipes
-- Categorize recipes by meal type or dietary restriction
-- Filter recipes by ingredients
-- Search for recipes by title or keyword
-- Sort recipes alphabetically, by prep time, or by dietary category
+## Project Overview
+A C++ recipe management system that helps users organize and filter recipes based on dietary preferences and ingredients.
 
-## Features
-- Add, edit, delete recipes
-- Ingredient and dietary filtering
-- Categorization by:
-	- Meal type (breakfast, lunch, dinner)
-	- Dietary restrictions (vegetarian, vegan, pescatarian, omnivore)
-- Search (by title or ingredient)
-- Sort recipes (by name, prep time, or category)
-- Blacklist ingredients to exclude unwanted items
+## Current Features
+- Recipe Management:
+  - Add new recipes with title and prep time
+  - List all recipes with details
+  - Add ingredients to existing recipes
 
-## How Project Meets Guidelines
-- **OOP Concepts**:
-	- Heavy use of inheritance, composition, abstract classes, and polymorphism
+- Easy Input System:
+  - Quick meal type selection (use number or first letter):
+    - 1/b - Breakfast
+    - 2/l - Lunch
+    - 3/d - Dinner
+    - 4/s - Snack
+  - Simple diet type selection:
+    - 1/v - Vegan
+    - 2/g - Vegetarian
+    - 3/p - Pescatarian
+    - 4/o - Omnivore
+
+- Data Persistence:
+  - Save recipes to file
+  - Load recipes on startup
+
+## Implementation Details
+- **OOP Design**:
+  - Abstract `Recipe` base class
+  - Specialized recipe types (Vegan, Vegetarian, Pescatarian, Omnivore)
+  - Ingredient class with name and quantity management
+
 - **Data Structures**:
-	- Custom `LinkedList` for recipe management, including support for dynamic insertion, removal, sorting, and searching
-- **Algorithms**:
-	- Insertion sort to sort recipes alphabetically or by prep time
-	- Linear search for finding recipes based on title or ingredients
-- **File I/O**:
-	- Reading/writing recipes to a `.txt` file to persist user data across sessions
-- **Templates/Polymorphism**:
-	- `LinkedList<T>` uses templates; recipe management uses polymorphism
-- **Focus**:
-	- Primarily an **OOP application** focused on user-driven management and filtering of recipes
+  - Custom `LinkedList<T>` template class
+  - Iterator support for traversal
+  - Memory-efficient ingredient storage
 
-## Stages of Development
+- **Templates & Polymorphism**:
+  - `LinkedList<T>` template class for flexible data storage
+  - Polymorphic recipe hierarchy for extensible design
+  - Iterator implementation for standard-library compatibility
 
-### Stage 1: Basic Class Structure
-- Build basic classes: `Recipe`, `Ingredient`
-- Implement `LinkedList<T>` template
+## Planned Features
+- Recipe search by title/ingredients
+- Ingredient blacklist filtering
+- Recipe sorting by name/prep time
+- Enhanced recipe categories and tags
+- Recipe instructions and steps
 
-### Stage 2: Core Features
-- Implement recipe creation, editing, and deletion
-- Basic search by title
+## Building and Running
+```bash
+# Compile the project
+g++ -std=c++17 src/*.cpp -o recipe_manager
 
-### Stage 3: Advanced Filtering
-- Add filtering by meal type, dietary restriction, and blacklist ingredients
+# Run the program
+./recipe_manager
+```
 
-### Stage 4: Sorting and File I/O
-- Implement Insertion Sort for recipe lists
-- Implement file loading/saving for persistence
+## Project Structure
+```
+src/
+├── Recipe.h/cpp         # Abstract base class
+├── VeganRecipe.h/cpp    # Vegan recipe implementation
+├── VegetarianRecipe.h/cpp
+├── PescatarianRecipe.h/cpp
+├── OmnivoreRecipe.h/cpp
+├── Ingredient.h/cpp     # Ingredient management
+├── LinkedList.h/tpp    # Custom linked list implementation
+└── main.cpp            # Program entry and UI
+```
 
-### Stage 5: UI Polish & Testing
-- Refine console interface
-- Final testing and bug fixes
+## Development Roadmap
+### Stage 1: Core Structure ✓
+- Basic recipe class hierarchy
+- Custom LinkedList implementation
+- Console UI foundation
 
-### Stage 6: Stretch Features (Optional)
-- Add ratings or tags
-- Enhance blacklist system with suggestions for substitutions
+### Stage 2: Recipe Management ✓
+- Add/list recipes
+- Ingredient management
+- File I/O for persistence
+
+### Stage 3: Advanced Features (In Progress)
+- Recipe search and filtering
+- Sorting implementation
+- Enhanced user interface
+
+### Stage 4: Polish (Planned)
+- Input validation
+- Error handling
+- User experience improvements

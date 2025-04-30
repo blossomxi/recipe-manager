@@ -10,4 +10,5 @@ public:
        MealType mealType = MealType::Other);
 
     void display() const override;
+    virtual ~VeganRecipe() = default;
 };

@@ -2,8 +2,8 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include "Ingredient.h"
+#include "LinkedList.h"
 
 // Enumerations
 enum class MealType {
@@ -35,7 +35,7 @@ class Recipe {
 protected:
     std::string title;
     int prepTime; // Preparation time in minutes
-    std::vector<Ingredient> ingredients;
+    LinkedList<Ingredient> ingredients;
     MealType mealType;
     DietType dietType;
 
@@ -54,24 +54,31 @@ public:
     Recipe& operator=(const Recipe& copy);
 
     // Abstract display method
-    virtual void display() const = 0;
+    virtual void display() const = 0; // TODO: Implement display() in each derived class
 
     // Getters
     std::string getTitle() const;
     int getPrepTime() const;
-    const std::vector<Ingredient>& getIngredients() const; // Return const ref
+    const LinkedList<Ingredient>& getIngredients() const; // Return const ref
     MealType getMealType() const;
     DietType getDietType() const;
 
     // Setters (basic ones)
     void setTitle(const std::string& title);
     void setPrepTime(int prepTime);
-    // TODO: Add/Remove/Edit ingredients methods
+    // Ingredient management methods
+    void addIngredient(const Ingredient& ingredient);
+    void removeIngredient(const std::string& ingredientName);
+    void editIngredient(const std::string& oldName, const Ingredient& newIngredient);
+    
     void setMealType(MealType type);
     void setDietType(DietType type);
     
-    // TODO: Methods for filtering, searching (can be external functions too)
-    // TODO: Implement ingredient management methods (missing editRecipe)
-    bool matchesTitle(string title) const;
-    bool matchesIngredient(string ingredient) const;
+    // Search methods
+    bool matchesTitle(std::string title) const;
+    bool matchesIngredient(std::string ingredient) const;
+
+    // TODO: Add ingredient blacklist filtering
+    // TODO: Add file I/O for recipe persistence
+    // TODO: Add recipe categories and tags
 };

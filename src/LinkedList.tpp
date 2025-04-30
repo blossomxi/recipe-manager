@@ -141,7 +141,7 @@ void LinkedList<T>::insertionSort(Compare comp) {
 }
 
 template <typename T>
-typename LinkedList<T>::iterator LinkedList<T>::linearSearch(const T& target) const {
+typename LinkedList<T>::iterator LinkedList<T>::linearSearch(const T& target) {
     Node* current = head;
     while (current) {
         if (current->data == target) {

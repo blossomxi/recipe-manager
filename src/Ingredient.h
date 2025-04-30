@@ -21,4 +21,9 @@ public:
 
     // Utility
     std::string toString() const;
+
+    // Operators
+    bool operator==(const Ingredient& other) const {
+        return name == other.name && quantity == other.quantity;
+    }
 };
