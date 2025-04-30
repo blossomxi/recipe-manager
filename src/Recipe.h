@@ -18,7 +18,6 @@ enum class MealType {
 enum class DietType {
     Vegetarian,
     Vegan,
-    Pescatarian,
     Omnivore,
     Other
 };

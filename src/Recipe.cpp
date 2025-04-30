@@ -33,7 +33,6 @@ std::string dietTypeToString(DietType type) {
     switch (type) {
         case DietType::Vegetarian:  return "Vegetarian";
         case DietType::Vegan:       return "Vegan";
-        case DietType::Pescatarian: return "Pescatarian";
         case DietType::Omnivore:    return "Omnivore";
         case DietType::Other:       return "Other";
         default:                    return "Unknown";
@@ -45,7 +44,6 @@ DietType stringToDietType(const std::string& str) {
     std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
     if (lowerStr == "vegetarian") return DietType::Vegetarian;
     if (lowerStr == "vegan") return DietType::Vegan;
-    if (lowerStr == "pescatarian") return DietType::Pescatarian;
     if (lowerStr == "omnivore") return DietType::Omnivore;
     return DietType::Other;
 }
