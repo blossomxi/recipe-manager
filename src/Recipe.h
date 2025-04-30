@@ -10,7 +10,7 @@ enum class MealType {
     Breakfast,
     Lunch,
     Dinner,
-    Snack, // Added Snack for more variety
+    Snack, 
     Dessert,
     Other
 };
@@ -22,14 +22,14 @@ enum class DietType {
     Other
 };
 
-// Helper function to convert MealType to string (optional but useful)
+// Helper functions
 std::string mealTypeToString(MealType type);
 MealType stringToMealType(const std::string& str);
 
-// Helper function to convert DietType to string (optional but useful)
 std::string dietTypeToString(DietType type);
 DietType stringToDietType(const std::string& str);
 
+// Recipe class
 class Recipe {
 protected:
     std::string title;

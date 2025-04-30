@@ -9,17 +9,12 @@ A C++ recipe management system that helps users organize and filter recipes base
   - List all recipes with details
   - Add ingredients to existing recipes
 
-- Easy Input System:
-  - Quick meal type selection (use number or first letter):
-    - 1/b - Breakfast
-    - 2/l - Lunch
-    - 3/d - Dinner
-    - 4/s - Snack
-  - Simple diet type selection:
-    - 1/v - Vegan
-    - 2/g - Vegetarian
-    - 3/p - Pescatarian
-    - 4/o - Omnivore
+- Streamlined Input System:
+  - Single-line recipe creation with title and prep time
+  - Quick meal and diet type selection using keywords:
+    - Meal types: breakfast, lunch, dinner, snack, dessert
+    - Diet types: vegan, vegetarian, omnivore
+  - Bulk ingredient entry with name:quantity pairs
 
 - Data Persistence:
   - Save recipes to file
@@ -28,7 +23,7 @@ A C++ recipe management system that helps users organize and filter recipes base
 ## Implementation Details
 - **OOP Design**:
   - Abstract `Recipe` base class
-  - Specialized recipe types (Vegan, Vegetarian, Pescatarian, Omnivore)
+  - Specialized recipe types (Vegan, Vegetarian, Omnivore)
   - Ingredient class with name and quantity management
 
 - **Data Structures**:
@@ -63,10 +58,10 @@ src/
 ├── Recipe.h/cpp         # Abstract base class
 ├── VeganRecipe.h/cpp    # Vegan recipe implementation
 ├── VegetarianRecipe.h/cpp
-├── PescatarianRecipe.h/cpp
 ├── OmnivoreRecipe.h/cpp
 ├── Ingredient.h/cpp     # Ingredient management
 ├── LinkedList.h/tpp    # Custom linked list implementation
+├── RecipeManager.h/cpp  # Recipe creation and management
 └── main.cpp            # Program entry and UI
 ```
 
@@ -82,9 +77,9 @@ src/
 - File I/O for persistence
 
 ### Stage 3: Advanced Features (In Progress)
+- Streamlined recipe input ✓
 - Recipe search and filtering
 - Sorting implementation
-- Enhanced user interface
 
 ### Stage 4: Polish (Planned)
 - Input validation
