@@ -11,7 +11,6 @@
 #include "Recipe.h"
 #include "VegetarianRecipe.h"
 #include "VeganRecipe.h"
-#include "PescatarianRecipe.h"
 #include "OmnivoreRecipe.h"
 
 const std::string RECIPE_FILE = "recipes.txt";
@@ -26,13 +25,17 @@ void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes);
 MealType getMealTypeInput();
 DietType getDietTypeInput();
 std::unique_ptr<Recipe> createRecipeFromData(const std::string& title, int prepTime, MealType mealType, DietType dietType);
+Recipe* findRecipeByTitle(LinkedList<std::unique_ptr<Recipe>>& recipes, const std::string& title); // Helper Prototype
+void removeRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes); // Prototype
+void editRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes); // Prototype
 
 int main() {
     LinkedList<std::unique_ptr<Recipe>> recipeList;
     loadRecipes(recipeList);
 
     int choice = 0;
-    while (choice != 4) {
+    while (choice != 6) {
+        std::cout << "\n-------------------------\n"; 
         displayMenu();
         std::cout << "Enter your choice: ";
         
@@ -57,6 +60,12 @@ int main() {
                 addIngredientsToRecipe(recipeList);
                 break;
             case 4:
+                editRecipe(recipeList); 
+                break;
+            case 5: 
+                removeRecipe(recipeList); 
+                break;
+            case 6: 
                 std::cout << "Saving recipes and exiting." << std::endl;
                 saveRecipes(recipeList);
                 break;
@@ -75,7 +84,9 @@ void displayMenu() {
     std::cout << "1. Add Recipe" << std::endl;
     std::cout << "2. List Recipes" << std::endl;
     std::cout << "3. Add Ingredients to Recipe" << std::endl;
-    std::cout << "4. Quit" << std::endl;
+    std::cout << "4. Edit Recipe" << std::endl;   
+    std::cout << "5. Remove Recipe" << std::endl; 
+    std::cout << "6. Quit" << std::endl;          
     std::cout << "=========================" << std::endl;
 }
 
@@ -84,11 +95,11 @@ void addRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
     int prepTime;
 
     std::cout << "Enter recipe title: ";
-    std::getline(std::cin, title); // Use getline after cin >> choice
+    std::getline(std::cin, title); 
 
     std::cout << "Enter prep time (minutes): ";
-    while (!(std::cin >> prepTime) || prepTime < 0) { 
-        std::cout << "Invalid input. Please enter a non-negative number for prep time: ";
+    while (!(std::cin >> prepTime) || prepTime <= 0) { 
+        std::cout << "Invalid input. Please enter a positive number for prep time: ";
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
@@ -124,7 +135,7 @@ void listRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
         for (const auto& recipePtr : recipes) {
             std::cout << "\nRecipe #" << i++ << ":\n";
             if (recipePtr) { // Check if pointer is valid
-                 recipePtr->display(); // Polymorphic call
+                 recipePtr->display(); 
             } else {
                  std::cerr << "Warning: Encountered a null recipe pointer in the list." << std::endl;
             }
@@ -214,53 +225,59 @@ void addIngredientsToRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
 }
 
 MealType getMealTypeInput() {
-    std::cout << "Enter meal type:\n";
-    std::cout << "1. Breakfast (or 'b')\n";
-    std::cout << "2. Lunch (or 'l')\n";
-    std::cout << "3. Dinner (or 'd')\n";
-    std::cout << "4. Snack (or 's')\n";
-    std::cout << "Choice: ";
-    
     std::string input;
-    std::getline(std::cin, input);
-    
-    // Convert to lowercase for letter input
-    if (!input.empty()) {
-        input[0] = std::tolower(input[0]);
+    while (true) {
+        std::cout << "Enter meal type:\n";
+        std::cout << "1. Breakfast (or 'b')\n";
+        std::cout << "2. Lunch (or 'l')\n";
+        std::cout << "3. Dinner (or 'd')\n";
+        std::cout << "4. Other (or 't')\n";   
+        std::cout << "Choice: ";
+        
+        std::getline(std::cin, input);
+
+        if (input.empty()) {
+            std::cout << "Input cannot be empty. Please try again.\n";
+            continue;
+        }
+        
+        // Convert to lowercase for letter input
+        char firstChar = std::tolower(input[0]);
+        
+        if (input == "1" || firstChar == 'b') return MealType::Breakfast;
+        if (input == "2" || firstChar == 'l') return MealType::Lunch;
+        if (input == "3" || firstChar == 'd') return MealType::Dinner;
+        if (input == "4" || firstChar == 't') return MealType::Other;   
+        
+        std::cout << "Invalid meal type. Please enter a valid number or letter.\n";
     }
-    
-    if (input == "1" || input == "b") return MealType::Breakfast;
-    if (input == "2" || input == "l") return MealType::Lunch;
-    if (input == "3" || input == "d") return MealType::Dinner;
-    if (input == "4" || input == "s") return MealType::Snack;
-    
-    std::cout << "Invalid meal type. Defaulting to Dinner." << std::endl;
-    return MealType::Dinner;
 }
 
 DietType getDietTypeInput() {
-    std::cout << "Enter diet type:\n";
-    std::cout << "1. Vegan (or 'v')\n";
-    std::cout << "2. Vegetarian (or 'g')\n";
-    std::cout << "3. Pescatarian (or 'p')\n";
-    std::cout << "4. Omnivore (or 'o')\n";
-    std::cout << "Choice: ";
-    
     std::string input;
-    std::getline(std::cin, input);
-    
-    // Convert to lowercase for letter input
-    if (!input.empty()) {
-        input[0] = std::tolower(input[0]);
+    while (true) {
+        std::cout << "Enter diet type:\n";
+        std::cout << "1. Vegan (or 'v')\n";
+        std::cout << "2. Vegetarian (or 'g')\n";
+        std::cout << "3. Omnivore (or 'o')\n";
+        std::cout << "Choice: ";
+        
+        std::getline(std::cin, input);
+
+        if (input.empty()) {
+            std::cout << "Input cannot be empty. Please try again.\n";
+            continue;
+        }
+        
+        // Convert to lowercase for letter input
+        char firstChar = std::tolower(input[0]);
+        
+        if (input == "1" || firstChar == 'v') return DietType::Vegan;
+        if (input == "2" || firstChar == 'g') return DietType::Vegetarian;
+        if (input == "3" || firstChar == 'o') return DietType::Omnivore;
+        
+        std::cout << "Invalid diet type. Please enter a valid number or letter.\n";
     }
-    
-    if (input == "1" || input == "v") return DietType::Vegan;
-    if (input == "2" || input == "g") return DietType::Vegetarian;
-    if (input == "3" || input == "p") return DietType::Pescatarian;
-    if (input == "4" || input == "o") return DietType::Omnivore;
-    
-    std::cout << "Invalid diet type. Defaulting to Omnivore." << std::endl;
-    return DietType::Omnivore;
 }
 
 void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
@@ -306,7 +323,7 @@ void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
                 std::cerr << "Warning [Line " << lineNumber << "]: Skipping line due to unknown error during parsing: " << line << std::endl;
             }
         } else {
-             if (!line.empty()) { // Don't warn about empty lines
+             if (!line.empty()) { 
                  std::cerr << "Warning [Line " << lineNumber << "]: Skipping malformed line (expected at least 4 comma-separated values): " << line << std::endl;
              }
         }
@@ -321,11 +338,145 @@ std::unique_ptr<Recipe> createRecipeFromData(const std::string& title, int prepT
             return std::unique_ptr<Recipe>(new VeganRecipe(title, prepTime, mealType));
         case DietType::Vegetarian:
             return std::unique_ptr<Recipe>(new VegetarianRecipe(title, prepTime, mealType));
-        case DietType::Pescatarian:
-            return std::unique_ptr<Recipe>(new PescatarianRecipe(title, prepTime, mealType));
         case DietType::Omnivore:
             return std::unique_ptr<Recipe>(new OmnivoreRecipe(title, prepTime, mealType));
         default:
-            throw std::invalid_argument("Invalid diet type");
+            throw std::invalid_argument("Invalid or unhandled diet type"); 
+    }
+}
+
+// Helper function to find a recipe by title (returns non-owning pointer)
+Recipe* findRecipeByTitle(LinkedList<std::unique_ptr<Recipe>>& recipes, const std::string& title) {
+    for (auto it = recipes.begin(); it != recipes.end(); ++it) {
+        if ((*it) && (*it)->getTitle() == title) {
+            return (*it).get(); // Return raw pointer from unique_ptr
+        }
+    }
+    return nullptr; // Not found
+}
+
+void removeRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+    std::cout << "Enter the exact title of the recipe to remove: ";
+    std::string titleToRemove;
+    std::getline(std::cin, titleToRemove);
+
+    if (titleToRemove.empty()) {
+        std::cout << "Recipe title cannot be empty." << std::endl;
+        return;
+    }
+
+    // Use the find helper first to confirm existence
+    Recipe* foundRecipe = findRecipeByTitle(recipes, titleToRemove);
+
+    if (!foundRecipe) {
+        std::cout << "Recipe '" << titleToRemove << "' not found." << std::endl;
+        return;
+    }
+
+    std::cout << "Found recipe: " << foundRecipe->getTitle() << std::endl;
+    std::cout << "Are you sure you want to remove it? (y/n): ";
+    std::string confirmation;
+    std::getline(std::cin, confirmation);
+
+    if (confirmation == "y" || confirmation == "Y") {
+        bool removed = recipes.removeIf([&titleToRemove](const std::unique_ptr<Recipe>& recipe_ptr) {
+            // Check for null just in case, though list shouldn't store nulls
+            return recipe_ptr && recipe_ptr->getTitle() == titleToRemove;
+        });
+
+        if (removed) {
+            std::cout << "Recipe '" << titleToRemove << "' removed successfully." << std::endl;
+        } else {
+            // This case should ideally not happen if findRecipeByTitle found it, but handle defensively
+            std::cout << "Error: Recipe '" << titleToRemove << "' could not be removed (already removed or error?)." << std::endl;
+        }
+    } else {
+        std::cout << "Removal cancelled." << std::endl;
+    }
+}
+
+void editRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+    std::cout << "Enter the exact title of the recipe to edit: ";
+    std::string titleToEdit;
+    std::getline(std::cin, titleToEdit);
+
+    if (titleToEdit.empty()) {
+        std::cout << "Recipe title cannot be empty." << std::endl;
+        return;
+    }
+
+    Recipe* recipeToEdit = findRecipeByTitle(recipes, titleToEdit);
+
+    if (!recipeToEdit) {
+        std::cout << "Recipe '" << titleToEdit << "' not found." << std::endl;
+        return;
+    }
+
+    int editChoice = 0;
+    while (editChoice != 4) {
+        std::cout << "\n--- Editing Recipe: " << recipeToEdit->getTitle() << " ---" << std::endl;
+        std::cout << "Current Prep Time: " << recipeToEdit->getPrepTime() << " minutes" << std::endl;
+        std::cout << "Current Meal Type: " << mealTypeToString(recipeToEdit->getMealType()) << std::endl;
+        std::cout << "Current Diet Type: " << dietTypeToString(recipeToEdit->getDietType()) << " (Cannot be changed)" << std::endl;
+        std::cout << "-------------------------" << std::endl;
+        std::cout << "1. Edit Title" << std::endl;
+        std::cout << "2. Edit Prep Time" << std::endl;
+        std::cout << "3. Edit Meal Type" << std::endl;
+        std::cout << "4. Done Editing" << std::endl;
+        std::cout << "-------------------------" << std::endl;
+        std::cout << "Enter your choice: ";
+
+        if (!(std::cin >> editChoice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Please enter a number." << std::endl;
+            editChoice = 0;
+            continue;
+        }
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Consume newline
+
+        switch (editChoice) {
+            case 1: { // Edit Title
+                std::string newTitle;
+                std::cout << "Enter new title: ";
+                std::getline(std::cin, newTitle);
+                if (!newTitle.empty()) {
+                    // Optional: Check if new title already exists?
+                    recipeToEdit->setTitle(newTitle);
+                    std::cout << "Title updated." << std::endl;
+                    // Important: Update the title we are using for the menu display
+                    titleToEdit = newTitle; 
+                } else {
+                    std::cout << "Title cannot be empty. Not updated." << std::endl;
+                }
+                break;
+            }
+            case 2: { // Edit Prep Time
+                int newPrepTime;
+                std::cout << "Enter new prep time (minutes, must be > 0): ";
+                while (!(std::cin >> newPrepTime) || newPrepTime <= 0) {
+                    std::cout << "Invalid input. Please enter a positive number for prep time: ";
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                recipeToEdit->setPrepTime(newPrepTime);
+                std::cout << "Prep time updated." << std::endl;
+                break;
+            }
+            case 3: { // Edit Meal Type
+                 std::cout << "Select new meal type:" << std::endl;
+                 MealType newMealType = getMealTypeInput(); // Reuse existing input function
+                 recipeToEdit->setMealType(newMealType);
+                 std::cout << "Meal type updated." << std::endl;
+                break;
+            }
+            case 4: // Done Editing
+                std::cout << "Finished editing '" << recipeToEdit->getTitle() << "'." << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+                break;
+        }
     }
 }

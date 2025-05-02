@@ -75,6 +75,9 @@ public:
     // Basic operations
     void push_back(T&& value); // Accept by rvalue reference for moving
     bool remove(const T& value); // Removes the first occurrence (comparison might need adjustment for unique_ptr)
+    template <typename Predicate>
+    bool removeIf(Predicate pred); // Removes the first element matching the predicate
+
     size_t size() const;
     bool isEmpty() const;
 

@@ -65,6 +65,38 @@ bool LinkedList<T>::remove(const T& value) {
 }
 
 template <typename T>
+template <typename Predicate>
+bool LinkedList<T>::removeIf(Predicate pred) {
+    if (head == nullptr) {
+        return false;
+    }
+
+    // Check if the head node should be removed
+    if (pred(head->data)) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        count--;
+        return true;
+    }
+
+    // Iterate through the rest of the list
+    Node* current = head;
+    while (current->next != nullptr) {
+        if (pred(current->next->data)) {
+            Node* temp = current->next;
+            current->next = current->next->next;
+            delete temp;
+            count--;
+            return true;
+        }
+        current = current->next;
+    }
+
+    return false; // No element satisfied the predicate
+}
+
+template <typename T>
 size_t LinkedList<T>::size() const {
     return count;
 }
