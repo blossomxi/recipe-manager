@@ -4,21 +4,16 @@
 A C++ recipe management system that helps users organize and filter recipes based on dietary preferences and ingredients.
 
 ## Current Features
-- Recipe Management:
-  - Add new recipes with title and prep time
-  - List all recipes with details
-  - Add ingredients to existing recipes
-
-- Streamlined Input System:
-  - Single-line recipe creation with title and prep time
-  - Quick meal and diet type selection using keywords:
-    - Meal types: breakfast, lunch, dinner, snack, dessert
-    - Diet types: vegan, vegetarian, omnivore
-  - Bulk ingredient entry with name:quantity pairs
-
-- Data Persistence:
-  - Save recipes to file
-  - Load recipes on startup
+- **Comprehensive Recipe Management:**
+  - Add new recipes specifying title, preparation time, meal type (`breakfast`, `lunch`, `dinner`, `snack`, `dessert`), and diet type (`vegan`, `vegetarian`, `omnivore`).
+  - Add multiple ingredients with name and quantity to existing recipes using a bulk entry format.
+  - List all stored recipes, displaying their details.
+- **Data Persistence:**
+  - Automatically save the current recipe list to a file upon exit.
+  - Automatically load recipes from the file on program startup.
+- **Foundation:**
+  - Object-oriented design with `Recipe` inheritance (`VeganRecipe`, `VegetarianRecipe`, `OmnivoreRecipe`).
+  - Custom `LinkedList` template class for managing recipes and ingredients.
 
 ## Implementation Details
 - **OOP Design**:
@@ -67,21 +62,23 @@ src/
 
 ## Development Roadmap
 ### Stage 1: Core Structure ✓
-- Basic recipe class hierarchy
-- Custom LinkedList implementation
-- Console UI foundation
+- Basic recipe class hierarchy (`Recipe`, `Vegan`, `Vegetarian`, `Omnivore`)
+- Custom `LinkedList<T>` implementation with iterators
+- Foundational console UI structure in `main.cpp`
 
-### Stage 2: Recipe Management ✓
-- Add/list recipes
-- Ingredient management
-- File I/O for persistence
+### Stage 2: Recipe Management & Persistence ✓
+- Implement functions to add recipes with core details (title, prep time).
+- Implement functions to add ingredients to recipes.
+- Implement listing of all recipes.
+- Integrate file I/O for saving and loading recipes.
 
-### Stage 3: Advanced Features (In Progress)
-- Streamlined recipe input ✓
-- Recipe search and filtering
-- Sorting implementation
+### Stage 3: Advanced Input & Features (Partially Complete)
+- Streamlined recipe input (single-line creation with meal/diet keywords, bulk ingredients) ✓
+- Recipe search by title/ingredients (Planned)
+- Ingredient blacklist filtering (Planned)
+- Sorting implementation (Planned)
 
 ### Stage 4: Polish (Planned)
-- Input validation
-- Error handling
-- User experience improvements
+- Robust input validation
+- Comprehensive error handling
+- General user experience improvements
