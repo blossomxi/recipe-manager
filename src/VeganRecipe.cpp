@@ -1,6 +1,8 @@
 // src/VeganRecipe.cpp
 #include "VeganRecipe.h"
 #include <iostream>
+#include <unordered_set>
+#include <algorithm>
 
 VeganRecipe::VeganRecipe(const std::string& title, int prepTime, MealType mealType)
     : Recipe(title, prepTime, mealType, DietType::Vegan) {}
@@ -20,4 +22,17 @@ void VeganRecipe::display() const {
         }
     }
     std::cout << "==================" << std::endl;
+}
+
+bool VeganRecipe::isValidForDiet(const Ingredient& ingredient) const {
+    // List of non-vegan ingredients
+    static const std::unordered_set<std::string> nonVeganIngredients = {
+        "milk", "cheese", "butter", "cream", "yogurt", "honey", "eggs", "meat", "beef", "pork", "chicken", "fish",
+        "seafood", "lard", "gelatin", "whey", "casein", "lactose", "shellfish", "poultry"
+    };
+
+    std::string lowerName = ingredient.getName();
+    std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+    
+    return nonVeganIngredients.find(lowerName) == nonVeganIngredients.end();
 }

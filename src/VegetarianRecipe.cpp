@@ -1,6 +1,8 @@
 // src/VegetarianRecipe.cpp
 #include "VegetarianRecipe.h"
 #include <iostream>
+#include <unordered_set>
+#include <algorithm>
 
 // Constructor definition
 VegetarianRecipe::VegetarianRecipe(const std::string& title, int prepTime, MealType mealType)
@@ -25,4 +27,16 @@ void VegetarianRecipe::display() const {
     std::cout << "======================" << std::endl;
     // TODO: Add instructions display later
     std::cout << "-------------------------" << std::endl;
+}
+
+bool VegetarianRecipe::isValidForDiet(const Ingredient& ingredient) const {
+    // List of non-vegetarian ingredients
+    static const std::unordered_set<std::string> nonVegetarianIngredients = {
+        "meat", "beef", "pork", "chicken", "fish", "seafood", "lard", "gelatin", "shellfish", "poultry"
+    };
+
+    std::string lowerName = ingredient.getName();
+    std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+    
+    return nonVegetarianIngredients.find(lowerName) == nonVegetarianIngredients.end();
 }

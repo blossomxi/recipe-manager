@@ -1,8 +1,13 @@
 // src/Recipe.cpp
 #include "Recipe.h"
+#include "VeganRecipe.h"
+#include "VegetarianRecipe.h"
+#include "OmnivoreRecipe.h"
 #include <stdexcept> // For invalid_argument
 #include <algorithm> // For std::transform
 #include <cctype>    // For ::tolower
+#include <unordered_set>
+#include <sstream>
 
 // --- Helper Enum Functions --- 
 
@@ -50,6 +55,9 @@ DietType stringToDietType(const std::string& str) {
 
 
 // --- Recipe Class Implementation ---
+
+// Initialize static member
+std::unordered_set<std::string> Recipe::blacklistedIngredients;
 
 Recipe::Recipe(const std::string& title, int prepTime, MealType mealType, DietType dietType)
     : title(title), prepTime(prepTime), mealType(mealType), dietType(dietType) {}
@@ -130,7 +138,11 @@ bool Recipe::matchesIngredient(std::string ingredient) const {
 }
 // Ingredient management methods
 void Recipe::addIngredient(const Ingredient& ingredient) {
-    ingredients.push_back(Ingredient(ingredient));
+    if (validateIngredient(ingredient)) {
+        ingredients.push_back(Ingredient(ingredient));
+    } else {
+        throw std::invalid_argument("Invalid ingredient for this recipe type: " + ingredient.getName());
+    }
 }
 
 void Recipe::removeIngredient(const std::string& ingredientName) {
@@ -149,4 +161,92 @@ void Recipe::editIngredient(const std::string& oldName, const Ingredient& newIng
             break;
         }
     }
+}
+
+void Recipe::addToBlacklist(const std::string& ingredient) {
+    std::string lowerIngredient = ingredient;
+    std::transform(lowerIngredient.begin(), lowerIngredient.end(), lowerIngredient.begin(), ::tolower);
+    blacklistedIngredients.insert(lowerIngredient);
+}
+
+void Recipe::removeFromBlacklist(const std::string& ingredient) {
+    std::string lowerIngredient = ingredient;
+    std::transform(lowerIngredient.begin(), lowerIngredient.end(), lowerIngredient.begin(), ::tolower);
+    blacklistedIngredients.erase(lowerIngredient);
+}
+
+bool Recipe::isBlacklisted(const std::string& ingredient) {
+    std::string lowerIngredient = ingredient;
+    std::transform(lowerIngredient.begin(), lowerIngredient.end(), lowerIngredient.begin(), ::tolower);
+    return blacklistedIngredients.find(lowerIngredient) != blacklistedIngredients.end();
+}
+
+bool Recipe::validateIngredient(const Ingredient& ingredient) const {
+    // Check if ingredient is blacklisted
+    if (isBlacklisted(ingredient.getName())) {
+        return false;
+    }
+    
+    // Check if ingredient is valid for the specific diet type
+    return isValidForDiet(ingredient);
+}
+
+std::string Recipe::serialize() const {
+    std::ostringstream oss;
+    oss << getTypeString() << "|"  // Recipe type
+        << title << "|"
+        << prepTime << "|"
+        << mealTypeToString(mealType) << "|"
+        << dietTypeToString(dietType) << "|";
+    
+    // Serialize ingredients
+    bool first = true;
+    for (const auto& ingredient : ingredients) {
+        if (!first) oss << ";";
+        oss << ingredient.getName() << ":" << ingredient.getQuantity();
+        first = false;
+    }
+    
+    return oss.str();
+}
+
+std::unique_ptr<Recipe> Recipe::deserialize(const std::string& data) {
+    std::istringstream iss(data);
+    std::string type, title, mealTypeStr, dietTypeStr, ingredientsStr;
+    int prepTime;
+    
+    // Parse the main recipe data
+    std::getline(iss, type, '|');
+    std::getline(iss, title, '|');
+    iss >> prepTime;
+    iss.ignore(); // Skip the '|'
+    std::getline(iss, mealTypeStr, '|');
+    std::getline(iss, dietTypeStr, '|');
+    std::getline(iss, ingredientsStr);
+    
+    // Create the appropriate recipe type
+    std::unique_ptr<Recipe> recipe;
+    if (type == "Vegan") {
+        recipe = std::make_unique<VeganRecipe>(title, prepTime, stringToMealType(mealTypeStr));
+    } else if (type == "Vegetarian") {
+        recipe = std::make_unique<VegetarianRecipe>(title, prepTime, stringToMealType(mealTypeStr));
+    } else if (type == "Omnivore") {
+        recipe = std::make_unique<OmnivoreRecipe>(title, prepTime, stringToMealType(mealTypeStr));
+    } else {
+        throw std::runtime_error("Unknown recipe type: " + type);
+    }
+    
+    // Parse and add ingredients
+    std::istringstream ingredientsStream(ingredientsStr);
+    std::string ingredientPair;
+    while (std::getline(ingredientsStream, ingredientPair, ';')) {
+        size_t colonPos = ingredientPair.find(':');
+        if (colonPos != std::string::npos) {
+            std::string name = ingredientPair.substr(0, colonPos);
+            std::string quantity = ingredientPair.substr(colonPos + 1);
+            recipe->addIngredient(Ingredient(name, quantity));
+        }
+    }
+    
+    return recipe;
 }

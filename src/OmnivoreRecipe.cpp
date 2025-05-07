@@ -21,3 +21,8 @@ void OmnivoreRecipe::display() const {
     }
     std::cout << "=====================" << std::endl;
 }
+
+bool OmnivoreRecipe::isValidForDiet(const Ingredient& ingredient) const {
+    // Omnivore recipes can have any ingredient except blacklisted ones
+    return true;
+}

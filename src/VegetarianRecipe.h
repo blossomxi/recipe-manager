@@ -15,4 +15,7 @@ public:
 
     // Virtual destructor
     virtual ~VegetarianRecipe() = default;
+
+    // Added getTypeString method
+    std::string getTypeString() const override { return "Vegetarian"; }
 };

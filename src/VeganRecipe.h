@@ -10,5 +10,6 @@ public:
        MealType mealType = MealType::Other);
 
     void display() const override;
+    std::string getTypeString() const override { return "Vegan"; }
     virtual ~VeganRecipe() = default;
 };

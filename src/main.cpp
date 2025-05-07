@@ -144,7 +144,6 @@ void listRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
     std::cout << "---------------------------" << std::endl;
 }
 
-// Basic saving: Title,PrepTime,MealTypeStr,DietTypeStr
 void saveRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
     std::ofstream outFile(RECIPE_FILE);
     if (!outFile) {
@@ -153,20 +152,39 @@ void saveRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
     }
 
     for (const auto& recipePtr : recipes) {
-        if (recipePtr) { // Check if pointer is valid before accessing
-             outFile << recipePtr->getTitle() << ","
-                     << recipePtr->getPrepTime() << ","
-                     << mealTypeToString(recipePtr->getMealType()) << ","
-                     << dietTypeToString(recipePtr->getDietType()) << std::endl;
-             // TODO: Add ingredient serialization
-             // TODO: Add recipe categories and tags serialization
+        if (recipePtr) {
+            outFile << recipePtr->serialize() << std::endl;
         }
     }
     outFile.close();
 }
 
+void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+    std::ifstream inFile(RECIPE_FILE);
+    if (!inFile) {
+        // File not existing is not an error on first run
+        return;
+    }
 
-// Basic loading: Title,PrepTime,MealTypeStr,DietTypeStr
+    std::string line;
+    int lineNumber = 0;
+    while (std::getline(inFile, line)) {
+        lineNumber++;
+        if (line.empty()) continue;
+
+        try {
+            std::unique_ptr<Recipe> recipe = Recipe::deserialize(line);
+            if (recipe) {
+                recipes.push_back(std::move(recipe));
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Warning [Line " << lineNumber << "]: Error deserializing recipe: " << e.what() << std::endl;
+        }
+    }
+    inFile.close();
+}
+
+// Basic saving: Title,PrepTime,MealTypeStr,DietTypeStr
 void addIngredientsToRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
     if (recipes.isEmpty()) {
         std::cout << "No recipes available. Please add a recipe first." << std::endl;
@@ -278,57 +296,6 @@ DietType getDietTypeInput() {
         
         std::cout << "Invalid diet type. Please enter a valid number or letter.\n";
     }
-}
-
-void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
-    std::ifstream inFile(RECIPE_FILE);
-    if (!inFile) {
-        // File not existing is not an error on first run
-        return;
-    }
-
-    std::string line;
-    int lineNumber = 0;
-    while (std::getline(inFile, line)) {
-        lineNumber++;
-        std::stringstream ss(line);
-        std::string segment;
-        std::vector<std::string> parts;
-
-        while (std::getline(ss, segment, ',')) {
-            parts.push_back(segment);
-        }
-
-        if (parts.size() >= 4) { // Expecting at least Title, PrepTime, Meal, Diet
-            try {
-                std::string title = parts[0];
-                int prepTime = std::stoi(parts[1]);
-                MealType mealType = stringToMealType(parts[2]);
-                DietType dietType = stringToDietType(parts[3]);
-                
-                std::unique_ptr<Recipe> recipe = createRecipeFromData(title, prepTime, mealType, dietType);
-                if (recipe) {
-                   // TODO: Add ingredient deserialization
-                   // TODO: Add recipe categories and tags deserialization
-                   recipes.push_back(std::move(recipe));
-                } else {
-                    std::cerr << "Warning [Line " << lineNumber << "]: Could not create recipe (unknown diet type?): " << line << std::endl;
-                }
-
-            } catch (const std::invalid_argument& e) {
-                std::cerr << "Warning [Line " << lineNumber << "]: Skipping line due to invalid number format (prepTime): " << line << std::endl;
-            } catch (const std::out_of_range& e) {
-                std::cerr << "Warning [Line " << lineNumber << "]: Skipping line due to number out of range (prepTime): " << line << std::endl;
-            } catch (...) {
-                std::cerr << "Warning [Line " << lineNumber << "]: Skipping line due to unknown error during parsing: " << line << std::endl;
-            }
-        } else {
-             if (!line.empty()) { 
-                 std::cerr << "Warning [Line " << lineNumber << "]: Skipping malformed line (expected at least 4 comma-separated values): " << line << std::endl;
-             }
-        }
-    }
-    inFile.close();
 }
 
 // Factory function to create the correct recipe type

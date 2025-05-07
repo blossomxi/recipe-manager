@@ -4,6 +4,7 @@
 #include <string>
 #include "Ingredient.h"
 #include "LinkedList.h"
+#include <unordered_set>
 
 // Enumerations
 enum class MealType {
@@ -37,6 +38,7 @@ protected:
     LinkedList<Ingredient> ingredients;
     MealType mealType;
     DietType dietType;
+    static std::unordered_set<std::string> blacklistedIngredients; // Static blacklist shared across all recipes
 
 public:
     // Constructor
@@ -76,6 +78,18 @@ public:
     // Search methods
     bool matchesTitle(std::string title) const;
     bool matchesIngredient(std::string ingredient) const;
+
+    // Ingredient validation methods
+    static void addToBlacklist(const std::string& ingredient);
+    static void removeFromBlacklist(const std::string& ingredient);
+    static bool isBlacklisted(const std::string& ingredient);
+    bool validateIngredient(const Ingredient& ingredient) const;
+    virtual bool isValidForDiet(const Ingredient& ingredient) const = 0; // Pure virtual method for diet-specific validation
+
+    // Serialization methods
+    virtual std::string serialize() const;
+    static std::unique_ptr<Recipe> deserialize(const std::string& data);
+    virtual std::string getTypeString() const = 0; // Pure virtual method to get recipe type string
 
     // TODO: Add ingredient blacklist filtering
     // TODO: Add file I/O for recipe persistence
