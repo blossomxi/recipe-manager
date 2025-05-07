@@ -22,6 +22,33 @@ A C++ recipe management system that helps users organize and filter recipes base
   - Ingredient validation and blacklist system.
   - Enums (`MealType`, `DietType`) are defined in their own headers (`MealType.h`, `DietType.h`) for UML compliance.
 
+## UML Diagram & Structure
+This project was designed to closely follow a UML diagram for clarity and maintainability. The UML describes the following relationships:
+
+- **Enums:**
+  - `MealType` and `DietType` are defined in their own headers and used throughout the project for type safety and clarity.
+- **Ingredient:**
+  - Represents a single ingredient with a name and quantity. Used as a value type in recipes.
+- **LinkedList<T>:**
+  - A custom singly linked list template class, used for both `Ingredient` and `Recipe` storage. Supports iterators, search, and sort.
+- **Recipe (abstract):**
+  - Base class for all recipes. Contains fields for title, prep time, meal type, diet type, and a `LinkedList<Ingredient>`. Provides virtual and pure virtual methods for extensibility.
+- **VeganRecipe, VegetarianRecipe, OmnivoreRecipe:**
+  - Inherit from `Recipe` and implement diet-specific validation and display logic.
+- **RecipeManager:**
+  - Static utility class for creating recipes and handling file I/O. Provides both interactive and non-interactive (UML-compliant) factory methods.
+
+**UML Relationships:**
+- Inheritance: `VeganRecipe`, `VegetarianRecipe`, `OmnivoreRecipe` inherit from `Recipe`.
+- Composition: `Recipe` has a `LinkedList<Ingredient>`.
+- Templates: `LinkedList<T>` is used for both pointer and value types.
+- Enums: Used for meal and diet types throughout the codebase.
+
+> This structure ensures the code is modular, extensible, and easy to understand for both students and instructors. The UML diagram (provided separately or below) can be used to visually trace these relationships.
+
+## UML Diagram
+![UML Diagram](docs/UML.png)
+
 ## Implementation Details
 - **OOP Design**:
   - Abstract `Recipe` base class with pure virtual methods
@@ -50,9 +77,6 @@ g++ -std=c++17 src/*.cpp -o recipe_manager
 ./recipe_manager
 ```
 
-## UML Diagram
-![UML](docs/UML.png)
-
 ## Project Structure
 ```
 src/
@@ -61,11 +85,11 @@ src/
 ├── VegetarianRecipe.h/cpp
 ├── OmnivoreRecipe.h/cpp
 ├── Ingredient.h/cpp     # Ingredient management
-├── LinkedList.h/tpp    # Custom linked list implementation
+├── LinkedList.h/tpp     # Custom linked list implementation
 ├── RecipeManager.h/cpp  # Recipe creation and management
 ├── MealType.h           # Enum for meal types
 ├── DietType.h           # Enum for diet types
-└── main.cpp            # Program entry and UI
+└── main.cpp             # Program entry and UI
 ```
 
 ## File Format: recipes.txt
