@@ -50,6 +50,9 @@ g++ -std=c++17 src/*.cpp -o recipe_manager
 ./recipe_manager
 ```
 
+## UML Diagram
+![UML](docs/UML.png)
+
 ## Project Structure
 ```
 src/
