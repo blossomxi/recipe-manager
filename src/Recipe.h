@@ -55,7 +55,7 @@ public:
     Recipe& operator=(const Recipe& copy);
 
     // Abstract display method
-    virtual void display() const = 0; // TODO: Implement display() in each derived class
+    virtual void display() const = 0;
 
     // Getters
     std::string getTitle() const;

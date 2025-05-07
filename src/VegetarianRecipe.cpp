@@ -25,7 +25,6 @@ void VegetarianRecipe::display() const {
         }
     }
     std::cout << "======================" << std::endl;
-    // TODO: Add instructions display later
     std::cout << "-------------------------" << std::endl;
 }
 

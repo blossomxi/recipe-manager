@@ -134,14 +134,21 @@ std::unique_ptr<Recipe> RecipeManager::addRecipe() {
                 break;
             }
             
-            recipe->addIngredient(Ingredient(name, quantity));
+            bool duplicate = false;
+            for (const auto& ing : recipe->getIngredients()) {
+                if (ing.getName() == name) {
+                    std::cout << "Warning: Duplicate ingredient '" << name << "' skipped.\n";
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (!duplicate) {
+                recipe->addIngredient(Ingredient(name, quantity));
+            }
         }
         
         if (validInput) break;
     }
-    
-    // TODO: Implement file I/O to save recipe
-    // saveRecipe(*recipe);
     
     return recipe;
 }

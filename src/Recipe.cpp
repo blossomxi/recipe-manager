@@ -135,6 +135,11 @@ bool Recipe::matchesIngredient(std::string ingredient) const {
 }
 // Ingredient management methods
 void Recipe::addIngredient(const Ingredient& ingredient) {
+    for (const auto& ing : ingredients) {
+        if (ing.getName() == ingredient.getName()) {
+            throw std::invalid_argument("Ingredient already exists: " + ingredient.getName());
+        }
+    }
     if (validateIngredient(ingredient)) {
         ingredients.push_back(Ingredient(ingredient));
     } else {

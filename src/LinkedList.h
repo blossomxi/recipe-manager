@@ -93,10 +93,9 @@ public:
 
     // Algorithms (declaration)
     template <typename Compare> 
-    void insertionSort(Compare comp); // TODO: Add sorting by prep time and title
+    void insertionSort(Compare comp);
     
-    // TODO: Linear search (can be external or member)
-    iterator linearSearch(const T& target); // TODO: Add linear search by recipe name and ingredients
+    iterator linearSearch(const T& target);
     const_iterator linearSearch(const T& target) const;
 };
 
