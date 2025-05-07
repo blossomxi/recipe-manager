@@ -2,11 +2,15 @@
 
 #include "Recipe.h"
 #include <memory>
+#include <string>
 
 class RecipeManager {
 public:
-    // Creates a new recipe by guiding the user through a streamlined input process
-    // Returns a unique_ptr to the created Recipe object
-    // Throws std::invalid_argument if input validation fails
+    // Interactive version
     static std::unique_ptr<Recipe> addRecipe();
+    // UML-compliant static factory
+    static std::unique_ptr<Recipe> addRecipe(const std::string& title, int prepTime, MealType mealType, DietType dietType);
+    // Static file I/O methods
+    static LinkedList<std::unique_ptr<Recipe>> loadFromFile(const std::string& filename);
+    static void saveToFile(const std::string& filename, const LinkedList<std::unique_ptr<Recipe>>& recipes);
 };

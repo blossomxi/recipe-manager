@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <cctype>
+#include <fstream>
 
 std::unique_ptr<Recipe> RecipeManager::addRecipe() {
     std::string input;
@@ -151,4 +152,41 @@ std::unique_ptr<Recipe> RecipeManager::addRecipe() {
     }
     
     return recipe;
+}
+
+// UML-compliant static factory
+std::unique_ptr<Recipe> RecipeManager::addRecipe(const std::string& title, int prepTime, MealType mealType, DietType dietType) {
+    switch (dietType) {
+        case DietType::Vegan:
+            return std::make_unique<VeganRecipe>(title, prepTime, mealType);
+        case DietType::Vegetarian:
+            return std::make_unique<VegetarianRecipe>(title, prepTime, mealType);
+        case DietType::Omnivore:
+            return std::make_unique<OmnivoreRecipe>(title, prepTime, mealType);
+        default:
+            throw std::invalid_argument("Invalid or unhandled diet type");
+    }
+}
+
+LinkedList<std::unique_ptr<Recipe>> RecipeManager::loadFromFile(const std::string& filename) {
+    LinkedList<std::unique_ptr<Recipe>> recipes;
+    std::ifstream inFile(filename);
+    if (!inFile) return recipes;
+    std::string line;
+    while (std::getline(inFile, line)) {
+        if (line.empty()) continue;
+        try {
+            std::unique_ptr<Recipe> recipe = Recipe::deserialize(line);
+            if (recipe) recipes.push_back(std::move(recipe));
+        } catch (...) {}
+    }
+    return recipes;
+}
+
+void RecipeManager::saveToFile(const std::string& filename, const LinkedList<std::unique_ptr<Recipe>>& recipes) {
+    std::ofstream outFile(filename);
+    if (!outFile) return;
+    for (const auto& recipePtr : recipes) {
+        if (recipePtr) outFile << recipePtr->serialize() << std::endl;
+    }
 }

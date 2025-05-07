@@ -4,24 +4,9 @@
 #include <string>
 #include "Ingredient.h"
 #include "LinkedList.h"
+#include "MealType.h"
+#include "DietType.h"
 #include <unordered_set>
-
-// Enumerations
-enum class MealType {
-    Breakfast,
-    Lunch,
-    Dinner,
-    Snack, 
-    Dessert,
-    Other
-};
-
-enum class DietType {
-    Vegetarian,
-    Vegan,
-    Omnivore,
-    Other
-};
 
 // Helper functions
 std::string mealTypeToString(MealType type);

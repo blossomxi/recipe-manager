@@ -21,8 +21,22 @@ LinkedList<T>::~LinkedList() {
 
 // --- Basic Operations ---
 template <typename T>
+void LinkedList<T>::push_back(const T& value) {
+    Node* newNode = new Node(value);
+    if (head == nullptr) {
+        head = newNode;
+    } else {
+        Node* current = head;
+        while (current->next != nullptr) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+    count++;
+}
+
+template <typename T>
 void LinkedList<T>::push_back(T&& value) { // Take T&& 
-    // Use std::move to pass the value to the Node constructor
     Node* newNode = new Node(std::move(value)); 
     if (head == nullptr) {
         head = newNode;
@@ -42,7 +56,7 @@ bool LinkedList<T>::remove(const T& value) {
         return false;
     }
 
-    if (head->data == value) { // Check if head needs removal
+    if (head->value == value) { // Check if head needs removal
         Node* temp = head;
         head = head->next;
         delete temp;
@@ -52,7 +66,7 @@ bool LinkedList<T>::remove(const T& value) {
 
     Node* current = head;
     while (current->next != nullptr) {
-        if (current->next->data == value) {
+        if (current->next->value == value) {
             Node* temp = current->next;
             current->next = current->next->next;
             delete temp;
@@ -72,7 +86,7 @@ bool LinkedList<T>::removeIf(Predicate pred) {
     }
 
     // Check if the head node should be removed
-    if (pred(head->data)) {
+    if (pred(head->value)) {
         Node* temp = head;
         head = head->next;
         delete temp;
@@ -83,7 +97,7 @@ bool LinkedList<T>::removeIf(Predicate pred) {
     // Iterate through the rest of the list
     Node* current = head;
     while (current->next != nullptr) {
-        if (pred(current->next->data)) {
+        if (pred(current->next->value)) {
             Node* temp = current->next;
             current->next = current->next->next;
             delete temp;
@@ -153,14 +167,14 @@ void LinkedList<T>::insertionSort(Compare comp) {
         Node* next = current->next; // Save next node before modifying current's links
 
         // Find the correct position to insert 'current' in the 'sorted' list
-        if (sorted == nullptr || comp(current->data, sorted->data)) {
+        if (sorted == nullptr || comp(current->value, sorted->value)) {
             // Insert at the beginning of the sorted list
             current->next = sorted;
             sorted = current;
         } else {
             // Find the node *before* the insertion point in the sorted list
             Node* search = sorted;
-            while (search->next != nullptr && comp(search->next->data, current->data)) {
+            while (search->next != nullptr && comp(search->next->value, current->value)) {
                 search = search->next;
             }
             // Insert 'current' after 'search'
@@ -176,7 +190,7 @@ template <typename T>
 typename LinkedList<T>::iterator LinkedList<T>::linearSearch(const T& target) {
     Node* current = head;
     while (current) {
-        if (current->data == target) {
+        if (current->value == target) {
             return iterator(current);
         }
         current = current->next;
@@ -188,7 +202,7 @@ template <typename T>
 typename LinkedList<T>::const_iterator LinkedList<T>::linearSearch(const T& target) const {
     const Node* current = head;
     while (current) {
-        if (current->data == target) {
+        if (current->value == target) {
             return const_iterator(current);
         }
         current = current->next;

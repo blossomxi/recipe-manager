@@ -20,6 +20,7 @@ A C++ recipe management system that helps users organize and filter recipes base
   - Object-oriented design with `Recipe` inheritance (`VeganRecipe`, `VegetarianRecipe`, `OmnivoreRecipe`).
   - Custom `LinkedList` template class for managing recipes and ingredients.
   - Ingredient validation and blacklist system.
+  - Enums (`MealType`, `DietType`) are defined in their own headers (`MealType.h`, `DietType.h`) for UML compliance.
 
 ## Implementation Details
 - **OOP Design**:
@@ -59,7 +60,26 @@ src/
 ├── Ingredient.h/cpp     # Ingredient management
 ├── LinkedList.h/tpp    # Custom linked list implementation
 ├── RecipeManager.h/cpp  # Recipe creation and management
+├── MealType.h           # Enum for meal types
+├── DietType.h           # Enum for diet types
 └── main.cpp            # Program entry and UI
+```
+
+## File Format: recipes.txt
+Each recipe is stored as a single line in the following format:
+```
+Type|Title|PrepTime|MealType|DietType|ingredient1:quantity1;ingredient2:quantity2;...
+```
+- **Type**: Vegan, Vegetarian, or Omnivore
+- **Title**: Recipe name
+- **PrepTime**: Preparation time in minutes (integer)
+- **MealType**: Breakfast, Lunch, Dinner, Snack, Dessert, or Other
+- **DietType**: Vegan, Vegetarian, Omnivore, or Other
+- **Ingredients**: Each ingredient is `name:quantity`, separated by semicolons
+
+**Example:**
+```
+Vegan|Tofu Scramble|15|Breakfast|Vegan|tofu:200g;spinach:50g;onion:30g;turmeric:1tsp
 ```
 
 ## Development Status
@@ -73,6 +93,7 @@ src/
 - Sort functionality
 - Diet-specific ingredient validation
 - Blacklist system for ingredients
+- UML-compliant enums and file structure
 
 ### Future Enhancements
 - Recipe instructions and steps

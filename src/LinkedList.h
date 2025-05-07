@@ -9,12 +9,12 @@ template <typename T>
 class LinkedList {
 private:
     struct Node {
-        T data;
+        T value;
         Node* next;
         // Accept data by rvalue reference to allow moving
-        Node(T&& data, Node* next = nullptr) : data(std::move(data)), next(next) {}
+        Node(T&& value, Node* next = nullptr) : value(std::move(value)), next(next) {}
         // Or provide an overload for const lvalue refs if needed, but move is key for unique_ptr
-        Node(const T& data, Node* next = nullptr) : data(data), next(next) {} 
+        Node(const T& value, Node* next = nullptr) : value(value), next(next) {} 
     };
 
     Node* head;
@@ -32,8 +32,8 @@ public:
 
         iterator(Node* ptr) : m_ptr(ptr) {} 
 
-        reference operator*() const { return m_ptr->data; }
-        pointer operator->() { return &(m_ptr->data); }
+        reference operator*() const { return m_ptr->value; }
+        pointer operator->() { return &(m_ptr->value); }
         iterator& operator++() { m_ptr = m_ptr->next; return *this; }
         iterator operator++(int) { iterator tmp = *this; ++(*this); return tmp; }
 
@@ -56,8 +56,8 @@ public:
 
         const_iterator(const Node* ptr) : m_ptr(ptr) {} // Takes const Node*
 
-        reference operator*() const { return m_ptr->data; }
-        pointer operator->() const { return &(m_ptr->data); } // Return const T*
+        reference operator*() const { return m_ptr->value; }
+        pointer operator->() const { return &(m_ptr->value); } // Return const T*
         const_iterator& operator++() { m_ptr = m_ptr->next; return *this; }
         const_iterator operator++(int) { const_iterator tmp = *this; ++(*this); return tmp; }
 
@@ -73,7 +73,8 @@ public:
     ~LinkedList();
 
     // Basic operations
-    void push_back(T&& value); // Accept by rvalue reference for moving
+    void push_back(const T& value); // Overload for const T&
+    void push_back(T&& value); // Existing rvalue overload
     bool remove(const T& value); // Removes the first occurrence (comparison might need adjustment for unique_ptr)
     template <typename Predicate>
     bool removeIf(Predicate pred); // Removes the first element matching the predicate
@@ -97,6 +98,9 @@ public:
     
     iterator linearSearch(const T& target);
     const_iterator linearSearch(const T& target) const;
+
+    template <typename Compare>
+    void sort(Compare comp) { insertionSort(comp); }
 };
 
 // Include the template implementation file
