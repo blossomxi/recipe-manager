@@ -123,6 +123,7 @@ Vegan|Tofu Scramble|15|Breakfast|Vegan|tofu:200g;spinach:50g;onion:30g;turmeric:
 - UML-compliant enums and file structure
 
 ### Future Enhancements
+- Refactor main for simplicity
 - Recipe instructions and steps
 - Enhanced recipe categories and tags
 - Recipe export/import functionality
