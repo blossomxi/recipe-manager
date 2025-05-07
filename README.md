@@ -8,35 +8,37 @@ A C++ recipe management system that helps users organize and filter recipes base
   - Add new recipes specifying title, preparation time, meal type (`breakfast`, `lunch`, `dinner`, `snack`, `dessert`), and diet type (`vegan`, `vegetarian`, `omnivore`).
   - Add multiple ingredients with name and quantity to existing recipes using a bulk entry format.
   - List all stored recipes, displaying their details.
+  - Search recipes by title, ingredient, meal type, or diet type.
+  - Sort recipes by title, preparation time, or meal type.
+  - Edit existing recipes (title, prep time, meal type).
+  - Remove recipes with confirmation.
 - **Data Persistence:**
   - Automatically save the current recipe list to a file upon exit.
   - Automatically load recipes from the file on program startup.
+  - Serialized storage format for complete recipe data.
 - **Foundation:**
   - Object-oriented design with `Recipe` inheritance (`VeganRecipe`, `VegetarianRecipe`, `OmnivoreRecipe`).
   - Custom `LinkedList` template class for managing recipes and ingredients.
+  - Ingredient validation and blacklist system.
 
 ## Implementation Details
 - **OOP Design**:
-  - Abstract `Recipe` base class
-  - Specialized recipe types (Vegan, Vegetarian, Omnivore)
+  - Abstract `Recipe` base class with pure virtual methods
+  - Specialized recipe types (Vegan, Vegetarian, Omnivore) with diet-specific validation
   - Ingredient class with name and quantity management
+  - Polymorphic recipe hierarchy for extensible design
 
 - **Data Structures**:
-  - Custom `LinkedList<T>` template class
-  - Iterator support for traversal
-  - Memory-efficient ingredient storage
+  - Custom `LinkedList<T>` template class with iterator support
+  - Efficient ingredient storage and management
+  - Sorting and searching algorithms
+  - Memory-safe smart pointer usage
 
 - **Templates & Polymorphism**:
   - `LinkedList<T>` template class for flexible data storage
   - Polymorphic recipe hierarchy for extensible design
   - Iterator implementation for standard-library compatibility
-
-## Planned Features
-- Recipe search by title/ingredients
-- Ingredient blacklist filtering
-- Recipe sorting by name/prep time
-- Enhanced recipe categories and tags
-- Recipe instructions and steps
+  - Type-safe ingredient validation
 
 ## Building and Running
 ```bash
@@ -60,25 +62,21 @@ src/
 └── main.cpp            # Program entry and UI
 ```
 
-## Development Roadmap
-### Stage 1: Core Structure ✓
-- Basic recipe class hierarchy (`Recipe`, `Vegan`, `Vegetarian`, `Omnivore`)
+## Development Status
+### Completed Features ✓
+- Basic recipe class hierarchy with inheritance
 - Custom `LinkedList<T>` implementation with iterators
-- Foundational console UI structure in `main.cpp`
+- Recipe management (add, edit, remove)
+- Ingredient management with validation
+- File I/O with serialization
+- Search functionality
+- Sort functionality
+- Diet-specific ingredient validation
+- Blacklist system for ingredients
 
-### Stage 2: Recipe Management & Persistence ✓
-- Implement functions to add recipes with core details (title, prep time).
-- Implement functions to add ingredients to recipes.
-- Implement listing of all recipes.
-- Integrate file I/O for saving and loading recipes.
-
-### Stage 3: Advanced Input & Features (Partially Complete)
-- Streamlined recipe input (single-line creation with meal/diet keywords, bulk ingredients) ✓
-- Recipe search by title/ingredients (Planned)
-- Ingredient blacklist filtering (Planned)
-- Sorting implementation (Planned)
-
-### Stage 4: Polish (Planned)
-- Robust input validation
-- Comprehensive error handling
-- General user experience improvements
+### Future Enhancements
+- Recipe instructions and steps
+- Enhanced recipe categories and tags
+- Recipe export/import functionality
+- GUI interface
+- Recipe scaling functionality

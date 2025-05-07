@@ -81,10 +81,6 @@ public:
     size_t size() const;
     bool isEmpty() const;
 
-    // Access (Optional - useful but not strictly required by prompt for first draft)
-    // T& operator[](size_t index); // Be cautious with bounds
-    // const T& operator[](size_t index) const;
-
     // Iterator support
     iterator begin();
     iterator end();

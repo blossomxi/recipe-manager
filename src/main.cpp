@@ -28,20 +28,21 @@ std::unique_ptr<Recipe> createRecipeFromData(const std::string& title, int prepT
 Recipe* findRecipeByTitle(LinkedList<std::unique_ptr<Recipe>>& recipes, const std::string& title); // Helper Prototype
 void removeRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes); // Prototype
 void editRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes); // Prototype
+void searchRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes);
+void sortRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes);
 
 int main() {
     LinkedList<std::unique_ptr<Recipe>> recipeList;
     loadRecipes(recipeList);
 
     int choice = 0;
-    while (choice != 6) {
+    while (choice != 8) {
         std::cout << "\n-------------------------\n"; 
         displayMenu();
         std::cout << "Enter your choice: ";
         
-        // Improved input handling
         if (!(std::cin >> choice)) {
-            std::cin.clear(); // Clear error flags
+            std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Invalid input. Please enter a number." << std::endl;
             choice = 0;
@@ -65,7 +66,13 @@ int main() {
             case 5: 
                 removeRecipe(recipeList); 
                 break;
-            case 6: 
+            case 6:
+                searchRecipes(recipeList);
+                break;
+            case 7:
+                sortRecipes(recipeList);
+                break;
+            case 8: 
                 std::cout << "Saving recipes and exiting." << std::endl;
                 saveRecipes(recipeList);
                 break;
@@ -85,8 +92,10 @@ void displayMenu() {
     std::cout << "2. List Recipes" << std::endl;
     std::cout << "3. Add Ingredients to Recipe" << std::endl;
     std::cout << "4. Edit Recipe" << std::endl;   
-    std::cout << "5. Remove Recipe" << std::endl; 
-    std::cout << "6. Quit" << std::endl;          
+    std::cout << "5. Remove Recipe" << std::endl;
+    std::cout << "6. Search Recipes" << std::endl;
+    std::cout << "7. Sort Recipes" << std::endl;
+    std::cout << "8. Quit" << std::endl;          
     std::cout << "=========================" << std::endl;
 }
 
@@ -445,5 +454,107 @@ void editRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
                 std::cout << "Invalid choice. Please try again." << std::endl;
                 break;
         }
+    }
+}
+
+void searchRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
+    std::cout << "\n=== Search Recipes ===" << std::endl;
+    std::cout << "1. Search by title" << std::endl;
+    std::cout << "2. Search by ingredient" << std::endl;
+    std::cout << "3. Search by meal type" << std::endl;
+    std::cout << "4. Search by diet type" << std::endl;
+    std::cout << "Choice: ";
+
+    int choice;
+    if (!(std::cin >> choice) || choice < 1 || choice > 4) {
+        std::cout << "Invalid choice." << std::endl;
+        return;
+    }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    std::string searchTerm;
+    bool found = false;
+
+    switch (choice) {
+        case 1: {
+            std::cout << "Enter title to search: ";
+            std::getline(std::cin, searchTerm);
+            for (const auto& recipe : recipes) {
+                if (recipe->matchesTitle(searchTerm)) {
+                    recipe->display();
+                    found = true;
+                }
+            }
+            break;
+        }
+        case 2: {
+            std::cout << "Enter ingredient to search: ";
+            std::getline(std::cin, searchTerm);
+            for (const auto& recipe : recipes) {
+                if (recipe->matchesIngredient(searchTerm)) {
+                    recipe->display();
+                    found = true;
+                }
+            }
+            break;
+        }
+        case 3: {
+            std::cout << "Enter meal type to search: ";
+            std::getline(std::cin, searchTerm);
+            MealType searchMealType = stringToMealType(searchTerm);
+            for (const auto& recipe : recipes) {
+                if (recipe->getMealType() == searchMealType) {
+                    recipe->display();
+                    found = true;
+                }
+            }
+            break;
+        }
+        case 4: {
+            std::cout << "Enter diet type to search: ";
+            std::getline(std::cin, searchTerm);
+            DietType searchDietType = stringToDietType(searchTerm);
+            for (const auto& recipe : recipes) {
+                if (recipe->getDietType() == searchDietType) {
+                    recipe->display();
+                    found = true;
+                }
+            }
+            break;
+        }
+    }
+
+    if (!found) {
+        std::cout << "No recipes found matching your search criteria." << std::endl;
+    }
+}
+
+void sortRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+    std::cout << "\n=== Sort Recipes ===" << std::endl;
+    std::cout << "1. Sort by title" << std::endl;
+    std::cout << "2. Sort by prep time" << std::endl;
+    std::cout << "3. Sort by meal type" << std::endl;
+    std::cout << "Choice: ";
+
+    int choice;
+    if (!(std::cin >> choice) || choice < 1 || choice > 3) {
+        std::cout << "Invalid choice." << std::endl;
+        return;
+    }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    switch (choice) {
+        case 1:
+            recipes.sort(Recipe::compareByTitle);
+            std::cout << "Recipes sorted by title." << std::endl;
+            break;
+        case 2:
+            recipes.sort(Recipe::compareByPrepTime);
+            std::cout << "Recipes sorted by prep time." << std::endl;
+            break;
+        case 3:
+            recipes.sort(Recipe::compareByMealType);
+            std::cout << "Recipes sorted by meal type." << std::endl;
+            break;
     }
 }

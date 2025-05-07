@@ -11,5 +11,6 @@ public:
 
     void display() const override;
     std::string getTypeString() const override { return "Vegan"; }
+    bool isValidForDiet(const Ingredient& ingredient) const override;
     virtual ~VeganRecipe() = default;
 };

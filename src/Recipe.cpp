@@ -121,9 +121,6 @@ void Recipe::setDietType(DietType type) {
     this->dietType = type;
 }
 
-// TODO: Implement ingredient management methods (missing editRecipe)
-// TODO: Add recipe serialization for file I/O
-// TODO: Add ingredient validation and blacklist checking
 bool Recipe::matchesTitle(std::string title) const {
     return this->title == title;
 }

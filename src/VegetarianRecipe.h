@@ -18,4 +18,7 @@ public:
 
     // Added getTypeString method
     std::string getTypeString() const override { return "Vegetarian"; }
+
+    // Added isValidForDiet method
+    bool isValidForDiet(const Ingredient& ingredient) const override;
 };
