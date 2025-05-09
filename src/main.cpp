@@ -4,7 +4,6 @@
 #include <sstream>
 #include <string>
 #include <limits>
-// TODO: Remove vector include when ingredient serialization is implemented
 #include <stdexcept> // For exception handling during parsing
 
 #include "LinkedList.h"

@@ -5,7 +5,7 @@
 
 // --- Constructor/Destructor ---
 template <typename T>
-LinkedList<T>::LinkedList() : head(nullptr), count(0) {}
+LinkedList<T>::LinkedList() : head(nullptr), tail(nullptr), count(0) {}
 
 template <typename T>
 LinkedList<T>::~LinkedList() {
@@ -15,37 +15,34 @@ LinkedList<T>::~LinkedList() {
         delete current;
         current = next;
     }
-    head = nullptr; // Good practice
+    head = nullptr;
+    tail = nullptr;
     count = 0;
 }
 
 // --- Basic Operations ---
 template <typename T>
 void LinkedList<T>::push_back(const T& value) {
-    Node* newNode = new Node(value);
+    Node* newNode = new Node(value, nullptr, tail);
     if (head == nullptr) {
-        head = newNode;
+        head = tail = newNode;
     } else {
-        Node* current = head;
-        while (current->next != nullptr) {
-            current = current->next;
-        }
-        current->next = newNode;
+        tail->next = newNode;
+        newNode->prev = tail;
+        tail = newNode;
     }
     count++;
 }
 
 template <typename T>
-void LinkedList<T>::push_back(T&& value) { // Take T&& 
-    Node* newNode = new Node(std::move(value)); 
+void LinkedList<T>::push_back(T&& value) {
+    Node* newNode = new Node(std::move(value), nullptr, tail);
     if (head == nullptr) {
-        head = newNode;
+        head = tail = newNode;
     } else {
-        Node* current = head;
-        while (current->next != nullptr) {
-            current = current->next;
-        }
-        current->next = newNode;
+        tail->next = newNode;
+        newNode->prev = tail;
+        tail = newNode;
     }
     count++;
 }

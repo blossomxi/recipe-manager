@@ -1,4 +1,6 @@
 // src/Recipe.cpp
+// Implementation of the Recipe class and related helper functions for a recipe management system.
+// This file demonstrates OOP principles, custom data structures, and serialization logic.
 #include "Recipe.h"
 #include "VeganRecipe.h"
 #include "VegetarianRecipe.h"
@@ -11,6 +13,7 @@
 
 // --- Helper Enum Functions --- 
 
+// Converts a MealType enum to its string representation.
 std::string mealTypeToString(MealType type) {
     switch (type) {
         case MealType::Breakfast: return "Breakfast";
@@ -23,6 +26,7 @@ std::string mealTypeToString(MealType type) {
     }
 }
 
+// Converts a string to the corresponding MealType enum value (case-insensitive).
 MealType stringToMealType(const std::string& str) {
     std::string lowerStr = str;
     std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
@@ -34,6 +38,7 @@ MealType stringToMealType(const std::string& str) {
     return MealType::Other;
 }
 
+// Converts a DietType enum to its string representation.
 std::string dietTypeToString(DietType type) {
     switch (type) {
         case DietType::Vegetarian:  return "Vegetarian";
@@ -44,6 +49,7 @@ std::string dietTypeToString(DietType type) {
     }
 }
 
+// Converts a string to the corresponding DietType enum value (case-insensitive).
 DietType stringToDietType(const std::string& str) {
     std::string lowerStr = str;
     std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
@@ -56,12 +62,14 @@ DietType stringToDietType(const std::string& str) {
 
 // --- Recipe Class Implementation ---
 
-// Initialize static member
+// Static member for global ingredient blacklist shared by all Recipe instances.
 std::unordered_set<std::string> Recipe::blacklistedIngredients;
 
+// Constructor: Initializes a Recipe with title, prep time, meal type, and diet type.
 Recipe::Recipe(const std::string& title, int prepTime, MealType mealType, DietType dietType)
     : title(title), prepTime(prepTime), mealType(mealType), dietType(dietType) {}
 
+// Copy constructor: Deep copies all fields, including the linked list of ingredients.
 Recipe::Recipe(const Recipe& copy) {
     this->title = copy.title;
     this->prepTime = copy.prepTime;
@@ -70,6 +78,7 @@ Recipe::Recipe(const Recipe& copy) {
     this->ingredients = copy.ingredients;
 }
 
+// Copy assignment operator: Ensures deep copy and self-assignment safety.
 Recipe& Recipe::operator=(const Recipe& copy) {
     if (this != &copy) {
         this->title = copy.title;
@@ -81,50 +90,54 @@ Recipe& Recipe::operator=(const Recipe& copy) {
     return *this;
 }
 
-// Getters
+// --- Getters ---
+// Returns the recipe title.
 std::string Recipe::getTitle() const {
     return title;
 }
-
+// Returns the preparation time in minutes.
 int Recipe::getPrepTime() const {
     return prepTime;
 }
-
+// Returns a const reference to the linked list of ingredients.
 const LinkedList<Ingredient>& Recipe::getIngredients() const {
     return ingredients;
 }
-
+// Returns the meal type.
 MealType Recipe::getMealType() const {
     return mealType;
 }
-
+// Returns the diet type.
 DietType Recipe::getDietType() const {
     return dietType;
 }
 
-// Setters
+// --- Setters ---
+// Sets the recipe title.
 void Recipe::setTitle(const std::string& title) {
     this->title = title;
 }
-
+// Sets the preparation time (must be non-negative).
 void Recipe::setPrepTime(int prepTime) {
     if (prepTime >= 0) { // Basic validation
         this->prepTime = prepTime;
     }
 }
-
+// Sets the meal type.
 void Recipe::setMealType(MealType type) {
     this->mealType = type;
 }
-
+// Sets the diet type.
 void Recipe::setDietType(DietType type) {
     this->dietType = type;
 }
 
+// Checks if the recipe title matches the given string (exact match).
 bool Recipe::matchesTitle(std::string title) const {
     return this->title == title;
 }
 
+// Checks if the recipe contains an ingredient with the given name.
 bool Recipe::matchesIngredient(std::string ingredient) const {
     for (auto it = ingredients.cbegin(); it != ingredients.cend(); ++it) {
         if (it->getName() == ingredient) {
@@ -133,7 +146,9 @@ bool Recipe::matchesIngredient(std::string ingredient) const {
     }
     return false;
 }
-// Ingredient management methods
+
+// --- Ingredient Management Methods ---
+// Adds an ingredient to the recipe after validation (OOP: uses polymorphic validateIngredient).
 void Recipe::addIngredient(const Ingredient& ingredient) {
     for (const auto& ing : ingredients) {
         if (ing.getName() == ingredient.getName()) {
@@ -147,6 +162,7 @@ void Recipe::addIngredient(const Ingredient& ingredient) {
     }
 }
 
+// Removes an ingredient by name (linear search and remove using custom linked list).
 void Recipe::removeIngredient(const std::string& ingredientName) {
     for (auto it = ingredients.begin(); it != ingredients.end(); ++it) {
         if (it->getName() == ingredientName) {
@@ -156,6 +172,7 @@ void Recipe::removeIngredient(const std::string& ingredientName) {
     }
 }
 
+// Edits an existing ingredient by replacing it with a new one (by name).
 void Recipe::editIngredient(const std::string& oldName, const Ingredient& newIngredient) {
     for (auto it = ingredients.begin(); it != ingredients.end(); ++it) {
         if (it->getName() == oldName) {
@@ -165,24 +182,28 @@ void Recipe::editIngredient(const std::string& oldName, const Ingredient& newIng
     }
 }
 
+// --- Blacklist Management (Static) ---
+// Adds an ingredient to the global blacklist (case-insensitive).
 void Recipe::addToBlacklist(const std::string& ingredient) {
     std::string lowerIngredient = ingredient;
     std::transform(lowerIngredient.begin(), lowerIngredient.end(), lowerIngredient.begin(), ::tolower);
     blacklistedIngredients.insert(lowerIngredient);
 }
-
+// Removes an ingredient from the global blacklist (case-insensitive).
 void Recipe::removeFromBlacklist(const std::string& ingredient) {
     std::string lowerIngredient = ingredient;
     std::transform(lowerIngredient.begin(), lowerIngredient.end(), lowerIngredient.begin(), ::tolower);
     blacklistedIngredients.erase(lowerIngredient);
 }
-
+// Checks if an ingredient is blacklisted (case-insensitive).
 bool Recipe::isBlacklisted(const std::string& ingredient) {
     std::string lowerIngredient = ingredient;
     std::transform(lowerIngredient.begin(), lowerIngredient.end(), lowerIngredient.begin(), ::tolower);
     return blacklistedIngredients.find(lowerIngredient) != blacklistedIngredients.end();
 }
 
+// --- Ingredient Validation ---
+// Validates an ingredient for this recipe (checks blacklist and diet rules).
 bool Recipe::validateIngredient(const Ingredient& ingredient) const {
     // Check if ingredient is blacklisted
     if (isBlacklisted(ingredient.getName())) {
@@ -193,6 +214,8 @@ bool Recipe::validateIngredient(const Ingredient& ingredient) const {
     return isValidForDiet(ingredient);
 }
 
+// --- Serialization/Deserialization ---
+// Serializes the recipe to a string for file storage (format: type|title|prepTime|mealType|dietType|ingredient1:qty1;ingredient2:qty2;...)
 std::string Recipe::serialize() const {
     std::ostringstream oss;
     oss << getTypeString() << "|"  // Recipe type
@@ -212,6 +235,7 @@ std::string Recipe::serialize() const {
     return oss.str();
 }
 
+// Deserializes a recipe from a string, reconstructing the correct derived type and all ingredients.
 std::unique_ptr<Recipe> Recipe::deserialize(const std::string& data) {
     std::istringstream iss(data);
     std::string type, title, mealTypeStr, dietTypeStr, ingredientsStr;

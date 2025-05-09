@@ -5,19 +5,24 @@
 #include <stdexcept> // for std::out_of_range
 #include <iterator> // for iterator tags
 
+// Doubly-linked list node
+// Now includes prev pointer for full doubly-linked list support
+
 template <typename T>
 class LinkedList {
 private:
     struct Node {
         T value;
         Node* next;
+        Node* prev; // Added prev pointer for doubly-linked list
         // Accept data by rvalue reference to allow moving
-        Node(T&& value, Node* next = nullptr) : value(std::move(value)), next(next) {}
+        Node(T&& value, Node* next = nullptr, Node* prev = nullptr) : value(std::move(value)), next(next), prev(prev) {}
         // Or provide an overload for const lvalue refs if needed, but move is key for unique_ptr
-        Node(const T& value, Node* next = nullptr) : value(value), next(next) {} 
+        Node(const T& value, Node* next = nullptr, Node* prev = nullptr) : value(value), next(next), prev(prev) {} 
     };
 
     Node* head;
+    Node* tail; // Added tail pointer for O(1) push_back and reverse traversal
     size_t count;
 
 public:
@@ -91,6 +96,11 @@ public:
     const_iterator end() const;
     const_iterator cbegin() const; // Explicit const begin
     const_iterator cend() const;   // Explicit const end
+
+    // Doubly-linked list accessors
+    Node* getHead() const { return head; }
+    Node* getTail() const { return tail; }
+    int getSize() const { return static_cast<int>(count); }
 
     // Algorithms (declaration)
     template <typename Compare> 
