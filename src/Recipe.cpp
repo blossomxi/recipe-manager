@@ -15,14 +15,14 @@
 
 // Converts a MealType enum to its string representation.
 std::string mealTypeToString(MealType type) {
-    switch (type) {
-        case MealType::Breakfast: return "Breakfast";
-        case MealType::Lunch:     return "Lunch";
-        case MealType::Dinner:    return "Dinner";
-        case MealType::Snack:     return "Snack";
-        case MealType::Dessert:   return "Dessert";
-        case MealType::Other:     return "Other";
-        default:                  return "Unknown";
+    switch (static_cast<int>(type)) {
+        case static_cast<int>(MealType::Breakfast): return "Breakfast";
+        case static_cast<int>(MealType::Lunch):     return "Lunch";
+        case static_cast<int>(MealType::Dinner):    return "Dinner";
+        case static_cast<int>(MealType::Snack):     return "Snack";
+        case static_cast<int>(MealType::Dessert):   return "Dessert";
+        case static_cast<int>(MealType::Other):     return "Other";
+        default:                                    return "Unknown";
     }
 }
 
@@ -40,12 +40,12 @@ MealType stringToMealType(const std::string& str) {
 
 // Converts a DietType enum to its string representation.
 std::string dietTypeToString(DietType type) {
-    switch (type) {
-        case DietType::Vegetarian:  return "Vegetarian";
-        case DietType::Vegan:       return "Vegan";
-        case DietType::Omnivore:    return "Omnivore";
-        case DietType::Other:       return "Other";
-        default:                    return "Unknown";
+    switch (static_cast<int>(type)) {
+        case static_cast<int>(DietType::Vegetarian):  return "Vegetarian";
+        case static_cast<int>(DietType::Vegan):       return "Vegan";
+        case static_cast<int>(DietType::Omnivore):    return "Omnivore";
+        case static_cast<int>(DietType::Other):       return "Other";
+        default:                                      return "Unknown";
     }
 }
 
