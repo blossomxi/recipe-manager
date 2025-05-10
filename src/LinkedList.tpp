@@ -2,6 +2,19 @@
 // Implementation for LinkedList template class
 
 #include <utility> // For std::swap
+#include <type_traits>
+
+// Helper for deleting pointer types in C++11
+namespace detail {
+    template<typename T, bool is_ptr>
+    struct PointerDeleter {
+        static void deleteValue(T&) {}
+    };
+    template<typename T>
+    struct PointerDeleter<T, true> {
+        static void deleteValue(T& ptr) { delete ptr; }
+    };
+}
 
 // --- Constructor/Destructor ---
 template <typename T>
@@ -9,9 +22,15 @@ LinkedList<T>::LinkedList() : head(nullptr), tail(nullptr), count(0) {}
 
 template <typename T>
 LinkedList<T>::~LinkedList() {
+    clear();
+}
+
+template <typename T>
+void LinkedList<T>::clear() {
     Node* current = head;
     while (current != nullptr) {
         Node* next = current->next;
+        detail::PointerDeleter<T, std::is_pointer<T>::value>::deleteValue(current->value);
         delete current;
         current = next;
     }

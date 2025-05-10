@@ -9,7 +9,7 @@
 #include <cctype>
 #include <fstream>
 
-std::unique_ptr<Recipe> RecipeManager::addRecipe() {
+Recipe* RecipeManager::addRecipe() {
     std::string input;
     std::string title;
     int prepTime = 0;
@@ -86,16 +86,16 @@ std::unique_ptr<Recipe> RecipeManager::addRecipe() {
     }
     
     // Create appropriate recipe subclass based on diet type
-    std::unique_ptr<Recipe> recipe;
+    Recipe* recipe = nullptr;
     switch (dietType) {
         case DietType::Vegan:
-            recipe = std::make_unique<VeganRecipe>(title, prepTime, mealType);
+            recipe = new VeganRecipe(title, prepTime, mealType);
             break;
         case DietType::Vegetarian:
-            recipe = std::make_unique<VegetarianRecipe>(title, prepTime, mealType);
+            recipe = new VegetarianRecipe(title, prepTime, mealType);
             break;
         default:
-            recipe = std::make_unique<OmnivoreRecipe>(title, prepTime, mealType);
+            recipe = new OmnivoreRecipe(title, prepTime, mealType);
     }
     
     // Get ingredients
@@ -155,35 +155,37 @@ std::unique_ptr<Recipe> RecipeManager::addRecipe() {
 }
 
 // UML-compliant static factory
-std::unique_ptr<Recipe> RecipeManager::addRecipe(const std::string& title, int prepTime, MealType mealType, DietType dietType) {
+Recipe* RecipeManager::addRecipe(const std::string& title, int prepTime, MealType mealType, DietType dietType) {
     switch (dietType) {
         case DietType::Vegan:
-            return std::make_unique<VeganRecipe>(title, prepTime, mealType);
+            return new VeganRecipe(title, prepTime, mealType);
         case DietType::Vegetarian:
-            return std::make_unique<VegetarianRecipe>(title, prepTime, mealType);
+            return new VegetarianRecipe(title, prepTime, mealType);
         case DietType::Omnivore:
-            return std::make_unique<OmnivoreRecipe>(title, prepTime, mealType);
+            return new OmnivoreRecipe(title, prepTime, mealType);
         default:
             throw std::invalid_argument("Invalid or unhandled diet type");
     }
 }
 
-LinkedList<std::unique_ptr<Recipe>> RecipeManager::loadFromFile(const std::string& filename) {
-    LinkedList<std::unique_ptr<Recipe>> recipes;
+LinkedList<Recipe*> RecipeManager::loadFromFile(const std::string& filename) {
+    LinkedList<Recipe*> recipes;
     std::ifstream inFile(filename);
     if (!inFile) return recipes;
     std::string line;
     while (std::getline(inFile, line)) {
         if (line.empty()) continue;
         try {
-            std::unique_ptr<Recipe> recipe = Recipe::deserialize(line);
-            if (recipe) recipes.push_back(std::move(recipe));
-        } catch (...) {}
+            Recipe* recipe = Recipe::deserialize(line);
+            if (recipe) recipes.push_back(recipe);
+        } catch (const std::exception& e) {
+            std::cerr << "Error loading recipe: " << e.what() << std::endl;
+        }
     }
     return recipes;
 }
 
-void RecipeManager::saveToFile(const std::string& filename, const LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void RecipeManager::saveToFile(const std::string& filename, const LinkedList<Recipe*>& recipes) {
     std::ofstream outFile(filename);
     if (!outFile) return;
     for (const auto& recipePtr : recipes) {

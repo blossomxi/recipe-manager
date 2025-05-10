@@ -236,7 +236,7 @@ std::string Recipe::serialize() const {
 }
 
 // Deserializes a recipe from a string, reconstructing the correct derived type and all ingredients.
-std::unique_ptr<Recipe> Recipe::deserialize(const std::string& data) {
+Recipe* Recipe::deserialize(const std::string& data) {
     std::istringstream iss(data);
     std::string type, title, mealTypeStr, dietTypeStr, ingredientsStr;
     int prepTime;
@@ -251,13 +251,13 @@ std::unique_ptr<Recipe> Recipe::deserialize(const std::string& data) {
     std::getline(iss, ingredientsStr);
     
     // Create the appropriate recipe type
-    std::unique_ptr<Recipe> recipe;
+    Recipe* recipe = nullptr;
     if (type == "Vegan") {
-        recipe = std::make_unique<VeganRecipe>(title, prepTime, stringToMealType(mealTypeStr));
+        recipe = new VeganRecipe(title, prepTime, stringToMealType(mealTypeStr));
     } else if (type == "Vegetarian") {
-        recipe = std::make_unique<VegetarianRecipe>(title, prepTime, stringToMealType(mealTypeStr));
+        recipe = new VegetarianRecipe(title, prepTime, stringToMealType(mealTypeStr));
     } else if (type == "Omnivore") {
-        recipe = std::make_unique<OmnivoreRecipe>(title, prepTime, stringToMealType(mealTypeStr));
+        recipe = new OmnivoreRecipe(title, prepTime, stringToMealType(mealTypeStr));
     } else {
         throw std::runtime_error("Unknown recipe type: " + type);
     }

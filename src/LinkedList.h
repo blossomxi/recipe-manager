@@ -5,9 +5,6 @@
 #include <stdexcept> // for std::out_of_range
 #include <iterator> // for iterator tags
 
-// Doubly-linked list node
-// Now includes prev pointer for full doubly-linked list support
-
 template <typename T>
 class LinkedList {
 private:
@@ -15,9 +12,7 @@ private:
         T value;
         Node* next;
         Node* prev; // Added prev pointer for doubly-linked list
-        // Accept data by rvalue reference to allow moving
         Node(T&& value, Node* next = nullptr, Node* prev = nullptr) : value(std::move(value)), next(next), prev(prev) {}
-        // Or provide an overload for const lvalue refs if needed, but move is key for unique_ptr
         Node(const T& value, Node* next = nullptr, Node* prev = nullptr) : value(value), next(next), prev(prev) {} 
     };
 
@@ -87,6 +82,11 @@ public:
     size_t size() const;
     bool isEmpty() const;
 
+    // Safe cleanup for pointer types (e.g., LinkedList<Recipe*>)
+    // Deletes all nodes and, if T is a pointer, also deletes each pointed-to object.
+    // Safe to call on non-pointer types as well (no effect on non-pointers).
+    void clear();
+
     // Iterator support
     iterator begin();
     iterator end();
@@ -94,8 +94,8 @@ public:
     // Const iterator support for range-based for on const objects
     const_iterator begin() const;
     const_iterator end() const;
-    const_iterator cbegin() const; // Explicit const begin
-    const_iterator cend() const;   // Explicit const end
+    const_iterator cbegin() const;
+    const_iterator cend() const; 
 
     // Doubly-linked list accessors
     Node* getHead() const { return head; }

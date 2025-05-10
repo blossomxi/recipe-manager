@@ -73,19 +73,19 @@ public:
 
     // Serialization methods
     virtual std::string serialize() const;
-    static std::unique_ptr<Recipe> deserialize(const std::string& data);
+    static Recipe* deserialize(const std::string& data);
     virtual std::string getTypeString() const = 0; // Pure virtual method to get recipe type string
 
     // Search and Sort methods
-    static bool compareByTitle(const std::unique_ptr<Recipe>& a, const std::unique_ptr<Recipe>& b) {
+    static bool compareByTitle(const Recipe* a, const Recipe* b) {
         return a->getTitle() < b->getTitle();
     }
 
-    static bool compareByPrepTime(const std::unique_ptr<Recipe>& a, const std::unique_ptr<Recipe>& b) {
+    static bool compareByPrepTime(const Recipe* a, const Recipe* b) {
         return a->getPrepTime() < b->getPrepTime();
     }
 
-    static bool compareByMealType(const std::unique_ptr<Recipe>& a, const std::unique_ptr<Recipe>& b) {
+    static bool compareByMealType(const Recipe* a, const Recipe* b) {
         return static_cast<int>(a->getMealType()) < static_cast<int>(b->getMealType());
     }
 

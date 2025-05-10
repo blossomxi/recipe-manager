@@ -23,22 +23,22 @@ const std::string RECIPE_FILE = "recipes.txt";
 //Function Prototypes
 int driver();
 void displayMenu();
-void addRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes);
-void listRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes);
-void addIngredientsToRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes);
-void saveRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes);
-void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes);
+void addRecipe(LinkedList<Recipe*>& recipes);
+void listRecipes(const LinkedList<Recipe*>& recipes);
+void addIngredientsToRecipe(LinkedList<Recipe*>& recipes);
+void saveRecipes(const LinkedList<Recipe*>& recipes);
+void loadRecipes(LinkedList<Recipe*>& recipes);
 MealType getMealTypeInput();
 DietType getDietTypeInput();
-std::unique_ptr<Recipe> createRecipeFromData(const std::string& title, int prepTime, MealType mealType, DietType dietType);
-Recipe* findRecipeByTitle(LinkedList<std::unique_ptr<Recipe>>& recipes, const std::string& title); // Helper Prototype
-void removeRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes); // Prototype
-void editRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes); // Prototype
-void searchRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes);
-void sortRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes);
+Recipe* createRecipeFromData(const std::string& title, int prepTime, MealType mealType, DietType dietType);
+Recipe* findRecipeByTitle(LinkedList<Recipe*>& recipes, const std::string& title); // Helper Prototype
+void removeRecipe(LinkedList<Recipe*>& recipes); // Prototype
+void editRecipe(LinkedList<Recipe*>& recipes); // Prototype
+void searchRecipes(const LinkedList<Recipe*>& recipes);
+void sortRecipes(LinkedList<Recipe*>& recipes);
 
 int driver() {
-    LinkedList<std::unique_ptr<Recipe>> recipeList;
+    LinkedList<Recipe*> recipeList;
     loadRecipes(recipeList);
 
     int choice = 0;
@@ -108,7 +108,7 @@ void displayMenu() {
     std::cout << "=========================" << std::endl;
 }
 
-void addRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void addRecipe(LinkedList<Recipe*>& recipes) {
     std::string title, mealStr, dietStr;
     int prepTime;
 
@@ -128,9 +128,9 @@ void addRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
 
     // Create the appropriate recipe type based on DietType
     try {
-         std::unique_ptr<Recipe> newRecipe = createRecipeFromData(title, prepTime, mealType, dietType);
+         Recipe* newRecipe = createRecipeFromData(title, prepTime, mealType, dietType);
          if(newRecipe) {
-            recipes.push_back(std::move(newRecipe)); // Move ownership into the list
+            recipes.push_back(newRecipe); // Just push pointer
             std::cout << "Recipe '" << title << "' added successfully!" << std::endl;
          } else {
              std::cout << "Failed to create recipe (unknown diet type?)." << std::endl;
@@ -144,7 +144,7 @@ void addRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
     // TODO: Add recipe sorting options
 }
 
-void listRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void listRecipes(const LinkedList<Recipe*>& recipes) {
     std::cout << "\n--- Listing All Recipes ---" << std::endl;
     if (recipes.isEmpty()) {
         std::cout << "No recipes available." << std::endl;
@@ -162,7 +162,7 @@ void listRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
     std::cout << "---------------------------" << std::endl;
 }
 
-void saveRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void saveRecipes(const LinkedList<Recipe*>& recipes) {
     std::ofstream outFile(RECIPE_FILE);
     if (!outFile) {
         std::cerr << "Error: Could not open file " << RECIPE_FILE << " for writing." << std::endl;
@@ -177,7 +177,7 @@ void saveRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
     outFile.close();
 }
 
-void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void loadRecipes(LinkedList<Recipe*>& recipes) {
     std::ifstream inFile(RECIPE_FILE);
     if (!inFile) {
         // File not existing is not an error on first run
@@ -191,9 +191,9 @@ void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
         if (line.empty()) continue;
 
         try {
-            std::unique_ptr<Recipe> recipe = Recipe::deserialize(line);
+            Recipe* recipe = Recipe::deserialize(line);
             if (recipe) {
-                recipes.push_back(std::move(recipe));
+                recipes.push_back(recipe);
             }
         } catch (const std::exception& e) {
             std::cerr << "Warning [Line " << lineNumber << "]: Error deserializing recipe: " << e.what() << std::endl;
@@ -203,7 +203,7 @@ void loadRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
 }
 
 // Basic saving: Title,PrepTime,MealTypeStr,DietTypeStr
-void addIngredientsToRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void addIngredientsToRecipe(LinkedList<Recipe*>& recipes) {
     if (recipes.isEmpty()) {
         std::cout << "No recipes available. Please add a recipe first." << std::endl;
         return;
@@ -317,30 +317,30 @@ DietType getDietTypeInput() {
 }
 
 // Factory function to create the correct recipe type
-std::unique_ptr<Recipe> createRecipeFromData(const std::string& title, int prepTime, MealType mealType, DietType dietType) {
+Recipe* createRecipeFromData(const std::string& title, int prepTime, MealType mealType, DietType dietType) {
     switch (dietType) {
         case DietType::Vegan:
-            return std::unique_ptr<Recipe>(new VeganRecipe(title, prepTime, mealType));
+            return new VeganRecipe(title, prepTime, mealType);
         case DietType::Vegetarian:
-            return std::unique_ptr<Recipe>(new VegetarianRecipe(title, prepTime, mealType));
+            return new VegetarianRecipe(title, prepTime, mealType);
         case DietType::Omnivore:
-            return std::unique_ptr<Recipe>(new OmnivoreRecipe(title, prepTime, mealType));
+            return new OmnivoreRecipe(title, prepTime, mealType);
         default:
             throw std::invalid_argument("Invalid or unhandled diet type"); 
     }
 }
 
 // Helper function to find a recipe by title (returns non-owning pointer)
-Recipe* findRecipeByTitle(LinkedList<std::unique_ptr<Recipe>>& recipes, const std::string& title) {
+Recipe* findRecipeByTitle(LinkedList<Recipe*>& recipes, const std::string& title) {
     for (auto it = recipes.begin(); it != recipes.end(); ++it) {
         if ((*it) && (*it)->getTitle() == title) {
-            return (*it).get(); // Return raw pointer from unique_ptr
+            return *it; // Return raw pointer
         }
     }
     return nullptr; // Not found
 }
 
-void removeRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void removeRecipe(LinkedList<Recipe*>& recipes) {
     std::cout << "Enter the exact title of the recipe to remove: ";
     std::string titleToRemove;
     std::getline(std::cin, titleToRemove);
@@ -364,15 +364,17 @@ void removeRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
     std::getline(std::cin, confirmation);
 
     if (confirmation == "y" || confirmation == "Y") {
-        bool removed = recipes.removeIf([&titleToRemove](const std::unique_ptr<Recipe>& recipe_ptr) {
-            // Check for null just in case, though list shouldn't store nulls
-            return recipe_ptr && recipe_ptr->getTitle() == titleToRemove;
+        bool removed = recipes.removeIf([&titleToRemove](Recipe* recipe_ptr) {
+            if (recipe_ptr && recipe_ptr->getTitle() == titleToRemove) {
+                delete recipe_ptr; // Free memory
+                return true;
+            }
+            return false;
         });
 
         if (removed) {
             std::cout << "Recipe '" << titleToRemove << "' removed successfully." << std::endl;
         } else {
-            // This case should ideally not happen if findRecipeByTitle found it, but handle defensively
             std::cout << "Error: Recipe '" << titleToRemove << "' could not be removed (already removed or error?)." << std::endl;
         }
     } else {
@@ -380,7 +382,7 @@ void removeRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
     }
 }
 
-void editRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void editRecipe(LinkedList<Recipe*>& recipes) {
     std::cout << "Enter the exact title of the recipe to edit: ";
     std::string titleToEdit;
     std::getline(std::cin, titleToEdit);
@@ -426,10 +428,8 @@ void editRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
                 std::cout << "Enter new title: ";
                 std::getline(std::cin, newTitle);
                 if (!newTitle.empty()) {
-                    // Optional: Check if new title already exists?
                     recipeToEdit->setTitle(newTitle);
                     std::cout << "Title updated." << std::endl;
-                    // Important: Update the title we are using for the menu display
                     titleToEdit = newTitle; 
                 } else {
                     std::cout << "Title cannot be empty. Not updated." << std::endl;
@@ -466,7 +466,7 @@ void editRecipe(LinkedList<std::unique_ptr<Recipe>>& recipes) {
     }
 }
 
-void searchRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void searchRecipes(const LinkedList<Recipe*>& recipes) {
     std::cout << "\n=== Search Recipes ===" << std::endl;
     std::cout << "1. Search by title" << std::endl;
     std::cout << "2. Search by ingredient" << std::endl;
@@ -538,7 +538,7 @@ void searchRecipes(const LinkedList<std::unique_ptr<Recipe>>& recipes) {
     }
 }
 
-void sortRecipes(LinkedList<std::unique_ptr<Recipe>>& recipes) {
+void sortRecipes(LinkedList<Recipe*>& recipes) {
     std::cout << "\n=== Sort Recipes ===" << std::endl;
     std::cout << "1. Sort by title" << std::endl;
     std::cout << "2. Sort by prep time" << std::endl;
