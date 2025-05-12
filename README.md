@@ -44,10 +44,8 @@ This project was designed to closely follow a UML diagram for clarity and mainta
 - Templates: `LinkedList<T>` is used for both pointer and value types.
 - Enums: Used for meal and diet types throughout the codebase.
 
-> This structure ensures the code is modular, extensible, and easy to understand for both students and instructors. The UML diagram (provided separately or below) can be used to visually trace these relationships.
-
 ## UML Diagram
-![UML Diagram](docs/UML.png)
+![UML Diagram](docs/UML.png) 
 
 ## Implementation Details
 - **OOP Design**:
