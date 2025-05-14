@@ -65,26 +65,36 @@ make
 
 ```bash
 recipe-manager/
-├── CMakeLists.txt
-├── docs/
-│   ├── UML.png
-│   └── images/
-│       ├── main_menu.png
-│       ├── list_view.png
-│       ├── search_results.png
-│       └── persistence.png
+├── .gitignore
+├── README.md
 ├── recipes.txt
+├── recipe-manager           # Compiled binary (after build)
 ├── src/
 │   ├── main.cpp
+│   ├── driver.h
 │   ├── Recipe.h/.cpp
 │   ├── VeganRecipe.h/.cpp
 │   ├── VegetarianRecipe.h/.cpp
 │   ├── OmnivoreRecipe.h/.cpp
 │   ├── Ingredient.h/.cpp
 │   ├── LinkedList.h/.tpp
-│   └── RecipeManager.h/.cpp
-└── README.md
+│   ├── RecipeManager.h/.cpp
+│   ├── MealType.h
+│   ├── DietType.h
+├── docs/
+│   ├── UML.png              # UML class diagram
+│   ├── Proposal.pdf         # Project proposal document
+│   └── images/
+│       ├── main_menu.png
+│       ├── search_ingredient.png
+│       ├── list_unsorted.png
+│       ├── list_sorted.png
+│       ├── add_recipe.png
+│       └── add_ingredients.png
 ```
+
+- See `docs/UML.png` for the full class diagram.
+- See `docs/Proposal.pdf` for the original project proposal.
 
 ## Future & Recap
 ### Completed Phases
