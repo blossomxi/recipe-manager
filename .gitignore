@@ -1,6 +1,19 @@
-.vscode/launch.json
-.vscode/c_cpp_properties.json
-.DS_Store
-recipes.txt
+# IDE and OS files
 .vscode/
+.idea/
+.DS_Store
+
+# Build artifacts and binaries
+/build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+recipe-manager
 .recipe-manager/
+
+# User data and generated files
+recipes.txt
+
+# Ignore all log files
+*.log
