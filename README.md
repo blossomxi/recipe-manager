@@ -63,7 +63,7 @@ make
 
 ## Project Structure
 
-```bash
+```tree
 recipe-manager/
 ├── .gitignore
 ├── README.md
