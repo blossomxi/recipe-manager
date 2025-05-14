@@ -67,7 +67,7 @@ make
 recipe-manager/
 ├── .gitignore
 ├── README.md
-├── recipes.txt
+├── recipes.txt              # Recipe database with 50+ pre-loaded recipes
 ├── recipe-manager           # Compiled binary (after build)
 ├── src/
 │   ├── main.cpp
