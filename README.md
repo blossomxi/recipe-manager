@@ -10,7 +10,7 @@ Fork & Function is a C++11 command‑line application built by a four‑member t
 - **Advanced Search & Sort**  
   Linear search across multiple fields and in‑list insertion sort for fast retrieval and ordering.  
 - **Automatic Persistence**  
-  Loads recipes from `recipes.txt` on startup and saves on exit—no extra steps required.  
+  Loads recipes from `recipes.txt` on startup and saves on exit, no extra steps required.  
 - **Polymorphic OOP Design**  
   Abstract `Recipe` base class with `VeganRecipe`, `VegetarianRecipe`, and `OmnivoreRecipe` subclasses.  
 - **Extensible Architecture**  
