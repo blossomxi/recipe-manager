@@ -12,8 +12,5 @@ Makefile
 recipe-manager
 .recipe-manager/
 
-# User data and generated files
-recipes.txt
-
 # Ignore all log files
 *.log

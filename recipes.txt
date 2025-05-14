@@ -1,0 +1,51 @@
+Vegan|Tofu Scramble|15|Breakfast|Vegan|tofu:200g;spinach:50g;onion:30g;turmeric:1tsp
+Vegetarian|Caprese Salad|10|Lunch|Vegetarian|tomato:100g;mozzarella:80g;basil:10g;olive oil:1tbsp
+Omnivore|Chicken Alfredo|30|Dinner|Omnivore|chicken breast:200g;fettuccine:100g;cream:50ml;parmesan:30g;garlic:1clove
+Vegan|Lentil Soup|40|Dinner|Vegan|lentils:150g;carrot:50g;celery:30g;onion:40g;vegetable broth:500ml
+Vegetarian|Greek Yogurt Parfait|5|Breakfast|Vegetarian|greek yogurt:150g;granola:30g;honey:1tbsp;berries:50g
+Omnivore|BLT Sandwich|12|Lunch|Omnivore|bacon:3strips;lettuce:20g;tomato:40g;bread:2slices;mayonnaise:1tbsp
+Vegan|Chickpea Curry|25|Dinner|Vegan|chickpeas:150g;coconut milk:100ml;spinach:50g;onion:30g;curry powder:1tbsp
+Vegetarian|Egg Salad|8|Lunch|Vegetarian|egg:2;mayonnaise:1tbsp;mustard:1tsp;celery:20g;bread:2slices
+Omnivore|Beef Tacos|20|Dinner|Omnivore|ground beef:150g;taco shells:3;lettuce:20g;cheddar:30g;salsa:2tbsp
+Vegan|Avocado Toast|7|Breakfast|Vegan|avocado:1;bread:2slices;lemon juice:1tsp;chili flakes:1tsp
+Vegetarian|Vegetable Stir Fry|18|Dinner|Vegetarian|broccoli:50g;carrot:30g;bell pepper:40g;soy sauce:2tbsp;tofu:80g
+Omnivore|Shrimp Scampi|22|Dinner|Omnivore|shrimp:120g;spaghetti:100g;garlic:2cloves;butter:20g;parsley:5g
+Vegan|Quinoa Salad|15|Lunch|Vegan|quinoa:100g;cucumber:40g;tomato:40g;lemon juice:1tbsp;olive oil:1tbsp
+Vegetarian|Mushroom Risotto|35|Dinner|Vegetarian|arborio rice:100g;mushroom:80g;parmesan:30g;onion:30g;vegetable broth:400ml
+Omnivore|Turkey Club|15|Lunch|Omnivore|turkey:80g;lettuce:20g;tomato:30g;bread:3slices;mayonnaise:1tbsp
+Vegan|Black Bean Burrito|20|Lunch|Vegan|black beans:100g;rice:80g;tortilla:1;lettuce:20g;salsa:2tbsp
+Vegetarian|Spinach Omelette|10|Breakfast|Vegetarian|egg:2;spinach:30g;cheddar:20g;milk:20ml;butter:10g
+Omnivore|Salmon Sushi|25|Lunch|Omnivore|sushi rice:100g;salmon:60g;nori:1sheet;avocado:30g;soy sauce:1tbsp
+Vegan|Sweet Potato Chili|35|Dinner|Vegan|sweet potato:100g;black beans:80g;tomato:60g;onion:30g;chili powder:1tbsp
+Vegetarian|Margherita Pizza|20|Dinner|Vegetarian|pizza dough:1;tomato sauce:50g;mozzarella:60g;basil:10g;olive oil:1tbsp
+Omnivore|Ham & Cheese Omelette|8|Breakfast|Omnivore|egg:2;ham:40g;cheddar:30g;milk:20ml;butter:10g
+Vegan|Peanut Noodles|15|Lunch|Vegan|rice noodles:100g;peanut butter:2tbsp;soy sauce:1tbsp;cucumber:30g;carrot:30g
+Vegetarian|Broccoli Cheddar Soup|25|Lunch|Vegetarian|broccoli:80g;cheddar:40g;milk:100ml;onion:20g;vegetable broth:300ml
+Omnivore|Chicken Caesar Salad|18|Lunch|Omnivore|chicken breast:80g;romaine:40g;croutons:20g;parmesan:20g;caesar dressing:2tbsp
+Vegan|Stuffed Peppers|30|Dinner|Vegan|bell pepper:2;quinoa:60g;black beans:50g;corn:30g;tomato:30g
+Vegetarian|Eggplant Parmesan|40|Dinner|Vegetarian|eggplant:100g;parmesan:40g;tomato sauce:60g;mozzarella:40g;breadcrumbs:20g
+Omnivore|Pork Fried Rice|20|Dinner|Omnivore|rice:100g;pork:60g;egg:1;peas:20g;soy sauce:1tbsp
+Vegan|Minestrone Soup|28|Lunch|Vegan|pasta:50g;zucchini:30g;carrot:30g;tomato:40g;beans:40g;vegetable broth:300ml
+Vegetarian|Cheese Quesadilla|10|Lunch|Vegetarian|tortilla:1;cheddar:40g;mozzarella:30g;salsa:2tbsp
+Omnivore|Fish Tacos|18|Lunch|Omnivore|white fish:80g;taco shells:2;cabbage:20g;lime:1;cilantro:5g
+Vegan|Falafel Wrap|20|Lunch|Vegan|falafel:3balls;lettuce:20g;tomato:30g;tortilla:1;hummus:2tbsp
+Vegetarian|Vegetable Lasagna|45|Dinner|Vegetarian|lasagna noodles:3;sauce:60g;zucchini:40g;spinach:30g;ricotta:40g
+Omnivore|Beef Stew|60|Dinner|Omnivore|beef:120g;potato:80g;carrot:40g;onion:30g;beef broth:400ml
+Vegan|Coconut Rice|15|Lunch|Vegan|rice:100g;coconut milk:80ml;peas:30g;scallion:10g;lime:1
+Vegetarian|Tomato Soup|12|Lunch|Vegetarian|tomato:100g;cream:30ml;onion:20g;garlic:1clove;vegetable broth:200ml
+Omnivore|Eggs Benedict|20|Breakfast|Omnivore|egg:2;english muffin:1;ham:40g;hollandaise:30g;butter:10g
+Vegan|Roasted Veggie Bowl|25|Dinner|Vegan|sweet potato:50g;broccoli:40g;chickpeas:40g;spinach:20g;tahini:1tbsp
+Vegetarian|Zucchini Fritters|18|Lunch|Vegetarian|zucchini:60g;egg:1;flour:20g;parmesan:20g;olive oil:1tbsp
+Omnivore|Turkey Chili|35|Dinner|Omnivore|turkey:100g;beans:60g;tomato:40g;onion:20g;chili powder:1tbsp
+Vegan|Pumpkin Soup|22|Lunch|Vegan|pumpkin:100g;carrot:30g;onion:20g;coconut milk:50ml;ginger:1tsp
+Vegetarian|Spinach Quiche|30|Breakfast|Vegetarian|egg:2;spinach:40g;cheddar:30g;milk:40ml;pie crust:1
+Omnivore|Chicken Pot Pie|50|Dinner|Omnivore|chicken:100g;pie crust:1;peas:30g;carrot:30g;cream:40ml
+Vegan|BBQ Jackfruit Sandwich|20|Lunch|Vegan|jackfruit:100g;bbq sauce:2tbsp;coleslaw:30g;bun:1;onion:10g
+Vegetarian|Vegetable Curry|25|Dinner|Vegetarian|potato:50g;carrot:30g;peas:30g;curry sauce:60g;rice:80g
+Omnivore|Bacon Cheeseburger|15|Lunch|Omnivore|beef patty:1;bacon:2strips;cheddar:30g;lettuce:20g;bun:1
+Vegan|Lentil Tacos|18|Lunch|Vegan|lentils:80g;taco shells:2;lettuce:20g;tomato:30g;avocado:30g
+Vegetarian|Mushroom Pasta|20|Dinner|Vegetarian|pasta:100g;mushroom:60g;cream:30ml;parmesan:20g;garlic:1clove
+Omnivore|Seafood Paella|45|Dinner|Omnivore|rice:100g;shrimp:40g;mussels:30g;chicken:40g;peas:20g
+Vegan|Veggie Sushi|30|Lunch|Vegan|sushi rice:80g;nori:1sheet;cucumber:30g;avocado:30g;carrot:20g
+Vegetarian|Cheese Souffle|35|Lunch|Vegetarian|egg:2;cheddar:40g;milk:30ml;flour:10g;butter:10g
+Omnivore|Lamb Gyro|25|Lunch|Omnivore|lamb:80g;pita:1;lettuce:20g;tomato:30g;tzatziki:2tbsp 
