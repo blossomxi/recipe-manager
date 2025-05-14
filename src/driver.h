@@ -96,30 +96,30 @@ int driver() {
 
 
 void displayMenu() {
-    std::cout << "\n========================================\n";
-    std::cout << "   🍴  Fork & Function: Recipe Manager  🍴\n";
-    std::cout <<   "========================================\n";
-    std::cout << "| 1. Add Recipe                      |\n";
-    std::cout << "| 2. List Recipes                    |\n";
-    std::cout << "| 3. Add Ingredients to Recipe        |\n";
-    std::cout << "| 4. Edit Recipe                     |\n";
-    std::cout << "| 5. Remove Recipe                   |\n";
-    std::cout << "| 6. Search Recipes                   |\n";
-    std::cout << "| 7. Sort Recipes                    |\n";
-    std::cout << "| 8. Quit                            |\n";
-    std::cout <<   "========================================\n";
+    std::cout << "\n\n";
+    std::cout << "      🍴  Fork & Function: Recipe Manager  🍴\n";
+    std::cout << "--------------------------------------------------\n";
+    std::cout << "  1. Add Recipe\n";
+    std::cout << "  2. List Recipes\n";
+    std::cout << "  3. Add Ingredients to Recipe\n";
+    std::cout << "  4. Edit Recipe\n";
+    std::cout << "  5. Remove Recipe\n";
+    std::cout << "  6. Search Recipes\n";
+    std::cout << "  7. Sort Recipes\n";
+    std::cout << "  8. Quit\n";
+    std::cout << "--------------------------------------------------\n\n";
 }
 
 void addRecipe(LinkedList<Recipe*>& recipes) {
     std::string title, mealStr, dietStr;
     int prepTime;
 
-    std::cout << "Enter recipe title: ";
+    std::cout << "\nEnter recipe title: ";
     std::getline(std::cin, title); 
 
-    std::cout << "Enter prep time (minutes): ";
+    std::cout << "\nEnter prep time (minutes): ";
     while (!(std::cin >> prepTime) || prepTime <= 0) { 
-        std::cout << "Invalid input. Please enter a positive number for prep time: ";
+        std::cout << "\nInvalid input. Please enter a positive number for prep time: ";
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
@@ -133,12 +133,12 @@ void addRecipe(LinkedList<Recipe*>& recipes) {
          Recipe* newRecipe = createRecipeFromData(title, prepTime, mealType, dietType);
          if(newRecipe) {
             recipes.push_back(newRecipe); // Just push pointer
-            std::cout << "Recipe '" << title << "' added successfully!" << std::endl;
+            std::cout << "\nRecipe '" << title << "' added successfully!\n";
          } else {
-             std::cout << "Failed to create recipe (unknown diet type?)." << std::endl;
+             std::cout << "\nFailed to create recipe (unknown diet type?).\n";
          }
     } catch (const std::exception& e) {
-        std::cerr << "Error adding recipe: " << e.what() << std::endl;
+        std::cerr << "\nError adding recipe: " << e.what() << "\n";
     }
     
     // TODO: Add ingredient input functionality
@@ -268,7 +268,7 @@ void addIngredientsToRecipe(LinkedList<Recipe*>& recipes) {
 MealType getMealTypeInput() {
     std::string input;
     while (true) {
-        std::cout << "Enter meal type:\n";
+        std::cout << "\nEnter meal type:\n";
         std::cout << "1. Breakfast (or 'b')\n";
         std::cout << "2. Lunch (or 'l')\n";
         std::cout << "3. Dinner (or 'd')\n";
@@ -278,7 +278,7 @@ MealType getMealTypeInput() {
         std::getline(std::cin, input);
 
         if (input.empty()) {
-            std::cout << "Input cannot be empty. Please try again.\n";
+            std::cout << "\nInput cannot be empty. Please try again.\n";
             continue;
         }
         
@@ -290,14 +290,14 @@ MealType getMealTypeInput() {
         if (input == "3" || firstChar == 'd') return MealType::Dinner;
         if (input == "4" || firstChar == 't') return MealType::Other;   
         
-        std::cout << "Invalid meal type. Please enter a valid number or letter.\n";
+        std::cout << "\nInvalid meal type. Please enter a valid number or letter.\n";
     }
 }
 
 DietType getDietTypeInput() {
     std::string input;
     while (true) {
-        std::cout << "Enter diet type:\n";
+        std::cout << "\nEnter diet type:\n";
         std::cout << "1. Vegan (or 'v')\n";
         std::cout << "2. Vegetarian (or 'g')\n";
         std::cout << "3. Omnivore (or 'o')\n";
@@ -306,7 +306,7 @@ DietType getDietTypeInput() {
         std::getline(std::cin, input);
 
         if (input.empty()) {
-            std::cout << "Input cannot be empty. Please try again.\n";
+            std::cout << "\nInput cannot be empty. Please try again.\n";
             continue;
         }
         
@@ -317,7 +317,7 @@ DietType getDietTypeInput() {
         if (input == "2" || firstChar == 'g') return DietType::Vegetarian;
         if (input == "3" || firstChar == 'o') return DietType::Omnivore;
         
-        std::cout << "Invalid diet type. Please enter a valid number or letter.\n";
+        std::cout << "\nInvalid diet type. Please enter a valid number or letter.\n";
     }
 }
 
