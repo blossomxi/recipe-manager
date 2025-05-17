@@ -10,6 +10,26 @@ Fork & Function is a C++11 command-line application for efficient recipe managem
 - For UML and design docs, see `docs/UML.md`.
 - For screenshots, see the `screenshots/` folder.
 
+## Screenshots
+
+**Main Menu**
+![Main Menu](screenshots/main_menu.png)
+
+**Search by Ingredient**
+![Search by Ingredient](screenshots/search_ingredient.png)
+
+**List (Unsorted, Sample Data)**
+![List Unsorted](screenshots/list_unsorted.png)
+
+**List Sorted by Prep Time**
+![List Sorted by Prep Time](screenshots/list_sorted.png)
+
+**Add New Recipe**
+![Add New Recipe](screenshots/add_recipe.png)
+
+**Add Ingredients to New Recipe**
+![Add Ingredients](screenshots/add_ingredients.png)
+
 ## Testing
 All core tests are run via a single test entry point: `tests/test_main.cpp`. This file simply includes `src/testDriver.h` and calls `testDriver()`, which runs a comprehensive suite covering all major features.
 
