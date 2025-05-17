@@ -41,6 +41,30 @@ make
 ./recipe-manager
 ```
 
+## Testing
+
+All core tests are run via a single test entry point: `tests/test_main.cpp`. This file simply includes `src/testDriver.h` and calls `testDriver()`, which runs a comprehensive suite covering adding, editing, listing, saving/loading, removing, searching, and sorting recipes using the custom data structures and logic implemented in the project.
+
+There are no class/function-specific test files in the `tests/` folder—everything is handled by `test_main.cpp` for simplicity and maintainability.
+
+### Running the Test Driver
+
+To run the tests:
+
+```bash
+g++ -std=c++11 -I./src tests/test_main.cpp -o test_driver
+./test_driver
+```
+
+All tests should pass with the message:
+
+```
+Running tests...
+All tests passed!
+```
+
+If any assertion fails, the test driver will indicate which test failed. This ensures the integrity of the main features and helps with regression testing during development.
+
 ## Screenshots
 
 ### Main Menu
